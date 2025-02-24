@@ -4,29 +4,145 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aashish Jaini - Portfolio</title>
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fafafa;
+            color: #333;
+        }
+
+        /* Header styles */
+        header {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin: 0;
+            color: #2c3e50;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            color: #7f8c8d;
+            margin: 10px 0;
+        }
+
+        h3 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+
+        h4 {
+            color: #34495e;
+            margin-top: 20px;
+        }
+
+        /* Section styles */
+        section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* List styles */
+        ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+
+        ul li {
+            margin: 10px 0;
+            position: relative;
+        }
+
+        ul li:before {
+            content: "•";
+            color: #3498db;
+            font-weight: bold;
+            position: absolute;
+            left: -15px;
+        }
+
+        /* Link styles */
+        a {
+            color: #3498db;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #2980b9;
+        }
+
+        /* Contact section */
+        .contact {
+            text-align: center;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        /* Project details */
+        .project {
+            margin: 20px 0;
+            padding: 15px;
+            border-left: 3px solid #3498db;
+            background-color: #f8f9fa;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            section {
+                padding: 15px;
+            }
+        }
+    </style>
 </head>
-<body bgcolor="#f0f0f0">
-    <!-- Self Introduction -->
+<body>
     <header>
-        <center>
-            <h1><font face="Arial" color="#333333">Aashish Jaini</font></h1>
-            <h2><font face="Arial" color="#666666">React Developer & Computer Science Student</font></h2>
-        </center>
-        <section>
-            <p align="center">
-                I am a dedicated computer science student with a passion for coding, problem-solving, and web development. 
-                Currently pursuing BTech at KMIT, I'm focused on translating academic knowledge into practical experience 
-                through internships and innovative projects. My goal is to contribute to cutting-edge development projects 
-                while continuously learning and growing as a developer.
-            </p>
-        </section>
+        <h1>Aashish Jaini</h1>
+        <h2>React Developer & Computer Science Student</h2>
+        <p>
+            I am a dedicated computer science student with a passion for coding, problem-solving, and web development. 
+            Currently pursuing BTech at KMIT, I'm focused on translating academic knowledge into practical experience 
+            through internships and innovative projects. My goal is to contribute to cutting-edge development projects 
+            while continuously learning and growing as a developer.
+        </p>
     </header>
 
-    <hr>
-
-    <!-- Skills -->
     <section>
-        <h3><font face="Arial">Technical Skills</font></h3>
+        <h3>Technical Skills</h3>
         <ul>
             <li>💻 Programming Languages: C++, JavaScript, Python</li>
             <li>🔧 Libraries and Frameworks: React.js, Node.js, MongoDB, Tailwind CSS, Express.js, Flask, Langchain</li>
@@ -34,56 +150,61 @@
         </ul>
     </section>
 
-    <hr>
-
-    <!-- Projects and Work Experience -->
     <section>
-        <h3><font face="Arial">Projects & Work Experience</font></h3>
+        <h3>Projects & Work Experience</h3>
         
         <h4>Professional Experience:</h4>
-        <p><strong>1. React Developer Intern - Blue Digital Media</strong></p>
-        <ul>
-            <li>Developed and maintained web applications using React.js</li>
-            <li>Collaborated with development team on new features</li>
-            <li>Enhanced problem-solving skills through hands-on experience</li>
-        </ul>
+        <div class="project">
+            <h4>1. React Developer Intern - Blue Digital Media</h4>
+            <ul>
+                <li>Developed and maintained web applications using React.js</li>
+                <li>Collaborated with development team on new features</li>
+                <li>Enhanced problem-solving skills through hands-on experience</li>
+            </ul>
+        </div>
 
-        <p><strong>2. Freelance Full Stack Developer - Varun Reddy Foods</strong>  (<a target="_blank" href="https://www.varunreddyfoods.co.in/">Website</a>)</p>
-        <ul>
-            <li>Designed and built website with online ordering system</li>
-        </ul>
+        <div class="project">
+            <h4>2. Freelance Full Stack Developer - Varun Reddy Foods</h4>
+            <p><a href="https://www.varunreddyfoods.co.in/" target="_blank">Website</a></p>
+            <ul>
+                <li>Designed and built website with online ordering system</li>
+            </ul>
+        </div>
 
         <h4>Key Projects:</h4>
-        <p><strong>1. Blockchain Based Secure Microgrid</strong> (February 2024)</p>
-        <p>Technologies: React.js, Flask, MongoDB, CSS, Solidity, Geth, API(Twilio)</p>
-        <ul>
-            <li>Developed user-friendly website for microgrid elements access</li>
-            <li>Integrated blockchain infrastructure for secure data storage</li>
-            <li>Implemented advanced simulator for microgrid setup analysis</li>
-            <li>GitHub: <a href="https://github.com/Aashish17405/BlockChain_based_Secured_Microgrid" target="_blank">Project Repository</a></li>
-        </ul>
+        <div class="project">
+            <h4>1. Blockchain Based Secure Microgrid (February 2024)</h4>
+            <p>Technologies: React.js, Flask, MongoDB, CSS, Solidity, Geth, API(Twilio)</p>
+            <ul>
+                <li>Developed user-friendly website for microgrid elements access</li>
+                <li>Integrated blockchain infrastructure for secure data storage</li>
+                <li>Implemented advanced simulator for microgrid setup analysis</li>
+            </ul>
+            <p><a href="https://github.com/Aashish17405/BlockChain_based_Secured_Microgrid" target="_blank">Project Repository</a></p>
+        </div>
 
-        <p><strong>2. ReadRite </strong> (July 2024)  (<a target="_blank" href="https://readrite.netlify.app/">Website</a>)</p>
-        <p>Technologies: React.js, MongoDB, Node.js, Express.js, Tailwind CSS</p>
-        <ul>
-            <li>Created responsive library management tool with advanced search</li>
-            <li>Implemented blockchain infrastructure for data security</li>
-            <li>GitHub: <a href="https://github.com/Aashish17405/ReadRite" target="_blank">Project Repository</a></li>
-        </ul>
+        <div class="project">
+            <h4>2. ReadRite (July 2024)</h4>
+            <p>Technologies: React.js, MongoDB, Node.js, Express.js, Tailwind CSS</p>
+            <ul>
+                <li>Created responsive library management tool with advanced search</li>
+                <li>Implemented blockchain infrastructure for data security</li>
+            </ul>
+            <p><a href="https://readrite.netlify.app/" target="_blank">Website</a> | <a href="https://github.com/Aashish17405/ReadRite" target="_blank">Project Repository</a></p>
+        </div>
 
-        <p><strong>3. NameOji</strong> (June 2024)  (<a target="_blank" href="https://naamoji.vercel.app/">Website</a>)</p>
-        <p>Technologies: React.js, Tailwind CSS</p>
-        <ul>
-            <li>Developed creative name generation tool with responsive design</li>
-            <li>GitHub: <a href="https://github.com/Aashish17405/NaamOji" target="_blank">Project Repository</a></li>
-        </ul>
+        <div class="project">
+            <h4>3. NameOji (June 2024)</h4>
+            <p>Technologies: React.js, Tailwind CSS</p>
+            <ul>
+                <li>Developed creative name generation tool with responsive design</li>
+            </ul>
+            <p><a href="https://naamoji.vercel.app/" target="_blank">Website</a> | <a href="https://github.com/Aashish17405/NaamOji" target="_blank">Project Repository</a></p>
+        </div>
     </section>
 
-    <hr>
-
-    <!-- Achievements -->
     <section>
-        <h3><font face="Arial">Achievements & Recognition</font></h3>
+        <h3>Achievements & Recognition</h3>
         <ul>
             <li>🏆 Runner-up at Code4AI competition - Rajiv Gandhi Institute of Technology</li>
             <li>🥈 2nd place at Zignasa2k23 - Brain O Vision</li>
@@ -96,43 +217,31 @@
         </ul>
     </section>
 
-    <hr>
-
-    <!-- Education -->
     <section>
-        <h3><font face="Arial">Education</font></h3>
-        <h4>Keshav Memorial Institute of Technology</h4>
-        <p>Bachelor of Technology - BTech, Computer Science</p>
-        <p>November 2022 - June 2026</p>
-        <p><strong>CGPA: 9.1/10.0</strong></p>
+        <h3>Education</h3>
+        <div class="project">
+            <h4>Keshav Memorial Institute of Technology</h4>
+            <p>Bachelor of Technology - BTech, Computer Science</p>
+            <p>November 2022 - June 2026</p>
+            <p><strong>CGPA: 9.1/10.0</strong></p>
+        </div>
 
-        <h4>Keshav Smarak Junior College</h4>
-        <p>Intermediate (2020 - 2022)</p>
-        <p><strong>Marks: 977/1000</strong></p>
+        <div class="project">
+            <h4>Keshav Smarak Junior College</h4>
+            <p>Intermediate (2020 - 2022)</p>
+            <p><strong>Marks: 977/1000</strong></p>
+        </div>
     </section>
 
-    <hr>
-
-    <!-- Contact Information -->
-    <section>
-        <h3><font face="Arial">Contact & Social Media</font></h3>
-        <center>
-            <p>📱 Phone: 9381150341</p>
-            <p>📧 Email: aashish17405@gmail.com</p>
-            <p>
-                <a href="https://www.linkedin.com/in/jaini-aashish-62a202290" target="_blank">LinkedIn</a> |
-                <a href="https://github.com/Aashish17405" target="_blank">GitHub</a> |
-                <a href="https://leetcode.com/aashish17405" target="_blank">LeetCode</a>
-            </p>
-        </center>
+    <section class="contact">
+        <h3>Contact & Social Media</h3>
+        <p>📱 Phone: 9381150341</p>
+        <p>📧 Email: aashish17405@gmail.com</p>
+        <div class="social-links">
+            <a href="https://www.linkedin.com/in/jaini-aashish-62a202290" target="_blank">LinkedIn</a>
+            <a href="https://github.com/Aashish17405" target="_blank">GitHub</a>
+            <a href="https://leetcode.com/aashish17405" target="_blank">LeetCode</a>
+        </div>
     </section>
-
-    <hr>
-
-    <footer>
-        <center>
-            <p><font size="2">© 2024 Aashish Jaini - Portfolio</font></p>
-        </center>
-    </footer>
 </body>
 </html>
