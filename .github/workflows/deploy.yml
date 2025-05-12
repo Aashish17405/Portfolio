@@ -22,7 +22,7 @@ jobs:
 
       - name: Install Dependencies
         run: npm install --legacy-peer-deps
-      
+
       - name: Build Application
         run: npm run build
 
@@ -37,13 +37,31 @@ jobs:
             cd /home/ubuntu
             echo "📁 Entered /home/ubuntu directory"
 
+            # Check and install Node.js if not installed
+            if ! command -v node &> /dev/null; then
+              echo "🔧 Installing Node.js..."
+              curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+              sudo apt-get install -y nodejs
+            fi
+
+            # Check and install PM2 if not installed
+            if ! command -v pm2 &> /dev/null; then
+              echo "🔧 Installing PM2 globally..."
+              sudo npm install -g pm2
+            fi
+
+            # Verify installations
+            echo "Node.js version: $(node -v)"
+            echo "NPM version: $(npm -v)"
+            echo "PM2 version: $(pm2 -v)"
+
             if [ ! -d "portfolio" ]; then
               echo "🧬 Cloning repository..."
               git clone git@github.com:aashish17405/portfolio.git 
             fi        
 
             cd portfolio
-            echo "📦 In CounterCICD directory, pulling latest code..."
+            echo "📦 In portfoliortfolio directory, pulling latest code..."
 
             git fetch origin main
             git reset --hard origin/main
