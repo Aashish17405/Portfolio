@@ -1,0 +1,64 @@
+name: Build and Deploy using PM2
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check Out Repo
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: npm install --legacy-peer-deps
+      
+      - name: Build Application
+        run: npm run build
+
+      # 3. Deploy to EC2 via SSH and manage with PM2
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/ubuntu
+            echo "📁 Entered /home/ubuntu directory"
+
+            if [ ! -d "portfolio" ]; then
+              echo "🧬 Cloning repository..."
+              git clone git@github.com:aashish17405/portfolio.git 
+            fi        
+
+            cd portfolio
+            echo "📦 In CounterCICD directory, pulling latest code..."
+
+            git fetch origin dev
+            git reset --hard origin/dev
+
+            echo "📦 Installing dependencies..."
+            npm install --legacy-peer-deps
+
+            echo "⚒️ Building project..."
+            npm run build
+
+            if pm2 list | grep -q "nextjs-app"; then
+              echo "🛑 Stopping existing app..."
+              pm2 stop nextjs-app
+              pm2 delete nextjs-app
+            fi
+
+            echo "🚀 Starting app with PM2..."
+            pm2 start npm --name "nextjs-app" -- start
