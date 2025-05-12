@@ -45,8 +45,8 @@ jobs:
             cd portfolio
             echo "📦 In CounterCICD directory, pulling latest code..."
 
-            git fetch origin dev
-            git reset --hard origin/dev
+            git fetch origin main
+            git reset --hard origin/main
 
             echo "📦 Installing dependencies..."
             npm install --legacy-peer-deps
