@@ -109,6 +109,8 @@ export default function AboutSection() {
                         "C++",
                         "AI",
                         "Blockchain",
+                        "AWS S3",
+                        "AWS EC2",
                       ].map((tech, index) => (
                         <Badge
                           key={tech}

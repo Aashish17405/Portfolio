@@ -16,6 +16,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "20"
+      
+      - name: Generate prisma client
+        run: npx prisma generate    
 
       - name: Install Dependencies
         run: npm install --legacy-peer-deps

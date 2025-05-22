@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { motion } from "framer-motion"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { useToast } from "@/components/ui/use-toast"
-import { Mail, Phone, MapPin, Send, Loader2 } from "lucide-react"
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/use-toast";
+import { Mail, Phone, MapPin, Send, Loader2 } from "lucide-react";
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -17,35 +17,72 @@ export default function ContactSection() {
     email: "",
     subject: "",
     message: "",
-  })
+  });
 
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const { toast } = useToast()
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
 
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false)
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: "Success!",
+          description: "Your message has been sent successfully.",
+          variant: "default",
+          duration: 5000,
+        });
+
+        // Reset form after successful submission
+        setFormData({
+          name: "",
+          email: "",
+          subject: "",
+          message: "",
+        });
+      } else {
+        // Handle server-side errors
+        toast({
+          title: "Error",
+          description:
+            data.error || "Failed to send message. Please try again.",
+          variant: "destructive",
+          duration: 5000,
+        });
+      }
+    } catch (error) {
+      // Handle network or other errors
+      console.error("Contact form error:", error);
       toast({
-        title: "Message sent!",
-        description: "Thank you for your message. I'll get back to you soon.",
-      })
-      setFormData({
-        name: "",
-        email: "",
-        subject: "",
-        message: "",
-      })
-    }, 1500)
-  }
+        title: "Error",
+        description:
+          "Network error. Please check your connection and try again.",
+        variant: "destructive",
+        duration: 5000,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const contactInfo = [
     {
@@ -64,9 +101,9 @@ export default function ContactSection() {
       icon: <MapPin className="h-5 w-5" />,
       title: "Location",
       value: "Hyderabad, Telangana, India",
-      link: "https://www.google.com/maps?q=Hyderabad,+Telangana,+India"
+      link: "https://www.google.com/maps?q=Hyderabad,+Telangana,+India",
     },
-  ]
+  ];
 
   return (
     <section id="contact" className="relative py-0 bg-gray-950">
@@ -93,7 +130,9 @@ export default function ContactSection() {
               >
                 <Card className="bg-gray-800/50 border-gray-700 hover:border-blue-500/50 transition-colors card-hover">
                   <CardContent className="p-4 flex items-center">
-                    <div className="p-3 rounded-full bg-blue-500/10 text-blue-400 mr-4">{info.icon}</div>
+                    <div className="p-3 rounded-full bg-blue-500/10 text-blue-400 mr-4">
+                      {info.icon}
+                    </div>
                     <div>
                       <h3 className="font-medium">{info.title}</h3>
                       <a
@@ -263,5 +302,5 @@ export default function ContactSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }

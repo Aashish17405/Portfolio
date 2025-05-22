@@ -117,6 +117,22 @@ export default function CodeProgressBar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [currentSection]);
 
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (!target.closest('[data-dropdown]')) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    if (isMenuOpen) {
+      document.addEventListener('click', handleClickOutside);
+    }
+
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [isMenuOpen]);
+
   const progressPercent = Math.round(scrollProgress * 100);
 
   // Generate the code content based on visible sections
@@ -166,69 +182,76 @@ export default function CodeProgressBar() {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : -20 }}
       transition={{ duration: 0.3 }}
-      className="fixed top-0 left-0 right-0 z-[60] px-4 py-2 bg-gray-900/90 backdrop-blur-sm border-b border-gray-800"
+      className="fixed top-0 left-0 right-0 z-[60] px-2 sm:px-4 py-2 bg-gray-900/90 backdrop-blur-sm border-b border-gray-800"
     >
       <div className="max-w-6xl mx-auto relative">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 font-mono text-xs sm:text-sm">
-          <div className="flex items-center">
-            <span className="text-green-400 mr-1 hidden sm:block">➜</span>
-            <span className="ml-2 text-yellow-400 hidden sm:block">
-              {progressPercent}%
-            </span>
+        <div className="flex items-center gap-2 sm:gap-4 font-mono text-xs sm:text-sm">
+          {/* Terminal indicator - hidden on mobile */}
+          <div className="hidden sm:flex items-center flex-shrink-0">
+            <span className="text-green-400 mr-1">➜</span>
+            <span className="text-yellow-400">{progressPercent}%</span>
           </div>
 
-          <div className="w-full bg-gray-800 rounded-md h-6 overflow-hidden relative border border-gray-700">
+          {/* Progress bar - takes remaining space */}
+          <div className="flex-1 bg-gray-800 rounded-md h-5 sm:h-6 overflow-hidden relative border border-gray-700">
             <div
               className="h-full bg-gradient-to-r from-blue-600 to-blue-400 transition-all duration-150 ease-out"
               style={{ width: `${progressPercent}%` }}
             >
-              <div className="absolute top-0 left-0 w-full h-full flex items-center px-2 text-xs">
-                <code className="text-gray-900 font-bold whitespace-nowrap">
+              <div className="absolute top-0 left-0 w-full h-full flex items-center px-1 sm:px-2 text-xs">
+                <code className="text-gray-900 font-bold whitespace-nowrap overflow-hidden">
                   {generateCodeContent()}
                 </code>
               </div>
             </div>
 
-            <div className="absolute top-0 right-2 h-full flex items-center">
+            {/* Remaining percentage - responsive text */}
+            <div className="absolute top-0 right-1 sm:right-2 h-full flex items-center">
               <code className="text-gray-400 text-xs">
-                <span className="hidden sm:block">
+                <span className="hidden md:block">
                   {progressPercent < 100
                     ? `${100 - progressPercent}% remaining`
                     : "complete"}
+                </span>
+                <span className="md:hidden">
+                  {progressPercent < 100 ? `${100 - progressPercent}%` : "✓"}
                 </span>
               </code>
             </div>
           </div>
 
           {/* Navigation Dropdown */}
-          <div className="relative ml-2">
+          <div className="relative flex-shrink-0" data-dropdown>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="flex items-center justify-center bg-gray-800 hover:bg-gray-700 text-white rounded-md p-1.5 transition-colors"
+              className="flex items-center justify-center bg-gray-800 hover:bg-gray-700 text-white rounded-md p-1 sm:p-1.5 transition-colors touch-manipulation"
               aria-label="Navigation menu"
             >
               <ChevronDown
-                size={16}
-                className={`transition-transform duration-200 ${
+                size={14}
+                className={`sm:w-4 sm:h-4 transition-transform duration-200 ${
                   isMenuOpen ? "rotate-180" : ""
                 }`}
               />
             </button>
 
             {isMenuOpen && (
-              <div className="absolute right-0 mt-2 w-36 bg-gray-800 border border-gray-700 rounded-md shadow-lg z-50">
+              <div className="absolute right-0 mt-2 w-36 sm:w-36 bg-gray-800 border border-gray-700 rounded-md shadow-lg z-50 max-h-80 overflow-y-auto">
                 <div className="py-1">
                   {sections.map((section) => (
                     <button
                       key={section.id}
                       onClick={() => scrollToSection(section.id)}
-                      className={`block w-full text-left px-4 py-2 text-sm ${
+                      className={`block w-full text-left px-3 sm:px-4 py-1 sm:py-2 text-sm transition-colors touch-manipulation ${
                         currentSection === section.id
                           ? "bg-blue-600 text-white"
-                          : "text-gray-300 hover:bg-gray-700"
+                          : "text-gray-300 hover:bg-gray-700 active:bg-gray-600"
                       }`}
                     >
-                      {section.name}
+                      <span className="">{section.name}</span>
+                      {currentSection === section.id && (
+                        <span className="float-right text-xs opacity-75">•</span>
+                      )}
                     </button>
                   ))}
                 </div>

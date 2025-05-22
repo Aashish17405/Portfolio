@@ -144,7 +144,7 @@ export default function SkillsSection() {
                   "Langchain",
                   "Flask",
                   "Docker",
-                  "Nginx",
+                  "AWS",
                 ].map((tool, index) => (
                   <motion.div
                     key={index}

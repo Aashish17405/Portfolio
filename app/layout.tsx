@@ -5,6 +5,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import BackgroundEffect from "@/components/background-effect";
+import CursorFollower from "@/components/cursor-follower";
 
 // Preload fonts to ensure they're available
 const inter = Inter({
@@ -57,6 +58,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <BackgroundEffect />
+          <CursorFollower/>
           {children}
           <Toaster />
         </ThemeProvider>
