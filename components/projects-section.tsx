@@ -87,6 +87,7 @@ export default function ProjectsSection() {
         "Chrome extension to assist people with color blindness and dyslexia, ensuring seamless accessibility across any website.",
       technologies: ["HTML", "CSS", "JavaScript", "Tailwind CSS"],
       github: "https://github.com/Aashish17405/SiteEase",
+      live: "https://chromewebstore.google.com/detail/site-ease/hhfjlgpooppjdgbnlemkpkjkddfbfpfj",
       icon: <Eye className="h-10 w-10 text-blue-400" />,
       bullets: [
         "Built a Chrome extension to assist people with color blindness and dyslexia, ensuring seamless accessibility across any website.",
