@@ -109,7 +109,7 @@ export default function ProjectsSection() {
         "CI/CD",
       ],
       github: "https://github.com/yourusername/codeverse-academy",
-      live: "https://codeverse-academy.com", // Replace with your actual URL
+      live: "https://codeverse.dev-aashish.tech/", // Replace with your actual URL
       icon: <Code className="h-10 w-10 text-blue-400" />,
       bullets: [
         "Implemented QR-based ticketing system for demo sessions with email confirmations",
