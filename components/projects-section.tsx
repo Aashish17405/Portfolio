@@ -194,8 +194,8 @@ export default function ProjectsSection() {
         "JWT Auth",
         "Tailwind CSS",
       ],
-      github: "https://github.com/yourusername/educube-navigator", // Update with your repo
-      live: "https://educube-navigator.vercel.app", // Optional – replace if deployed
+      github: "https://github.com/Aashish17405/educube-navigator", // Update with your repo
+      live: "https://educube-navigator.dev-aashish.tech/", // Optional – replace if deployed
       icon: <BookOpen className="h-10 w-10 text-blue-400" />, // More thematic than <Code />
       bullets: [
         "Designed distinct dashboards for students (progress tracking) and instructors (course management)",
@@ -220,11 +220,10 @@ export default function ProjectsSection() {
       live: "https://todo99x.dev-aashish.tech/",
       icon: <CheckCircle className="h-10 w-10 text-blue-400" />, // More thematic for a todo app
       bullets: [
-        "Built a performant MERN stack app with Vite for fast development and HMR.",
         "Implemented CRUD operations with MongoDB for seamless task management (create, complete, update, delete).",
         "Designed a responsive UI with Tailwind CSS, optimizing for both mobile and desktop users.",
         "Added task categorization (active/completed) for better productivity tracking.",
-        "Used Express.js for RESTful API endpoints and JWT for secure user authentication (if included).",
+        "Used Express.js for RESTful API endpoints and OAuth for secure user authentication.",
       ],
     },
     // Add more projects here following the same structure
