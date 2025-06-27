@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import BackgroundEffect from "@/components/background-effect";
 import CursorFollower from "@/components/cursor-follower";
+import { Analytics } from "@vercel/analytics/next"
 
 // Preload fonts to ensure they're available
 const inter = Inter({
@@ -59,6 +60,7 @@ export default function RootLayout({
         >
           <BackgroundEffect />
           <CursorFollower/>
+          <Analytics />
           {children}
           <Toaster />
         </ThemeProvider>
