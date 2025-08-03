@@ -56,6 +56,16 @@ export default function ExperienceSection() {
       experienceCertificate: "/Internship Certificate Aashish Jaini.pdf",
     },
     {
+      title: "Web Developer Intern",
+      company: "Scorely",
+      period: "2025",
+      description:
+        "Enhanced front-end features using React and Next.js while developing robust APIs with TypeScript RPC. Contributed to code quality through comprehensive reviews and documentation. Collaborated effectively in an agile environment through daily stand-ups, sprint planning, and team retrospectives.",
+      type: "work",
+      link: "https://www.astratechai.com/",
+      experienceCertificate: "/Experience Certificate - Aashish Jaini1.pdf",
+    },
+    {
       title: "Frontend Developer",
       company: "Varun Reddy Foods",
       period: "2024",

@@ -13,29 +13,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import CodeProgressBar from "@/components/code-progress-bar";
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Simulate loading for better UX
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, []);
 
   return (
     <main className="relative overflow-hidden bg-gradient-to-b from-gray-950 to-gray-900 text-white">
       <AnimatePresence mode="wait">
-        {isLoading ? (
-          <motion.div
-            key="loading"
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <LoadingScreen />
-          </motion.div>
-        ) : (
           <motion.div
             key="content"
             initial={{ opacity: 0 }}
@@ -53,7 +34,6 @@ export default function Home() {
               <ContactSection />
             </Suspense>
           </motion.div>
-        )}
       </AnimatePresence>
     </main>
   );

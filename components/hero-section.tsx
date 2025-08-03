@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Github, Linkedin, Download, Mail } from "lucide-react";
 import Image from "next/image";
+import { SiLeetcode } from "react-icons/si";
 
 export default function HeroSection() {
   return (
@@ -92,31 +93,60 @@ export default function HeroSection() {
                 transition={{ duration: 0.5, delay: 0.6 }}
                 className="flex items-center gap-4 pt-2"
               >
-                <a
+                <motion.a
                   href="https://github.com/Aashish17405"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-gray-400 hover:text-white transition-colors p-2 rounded-full hover:bg-white/10"
+                  whileHover={{ scale: 1.1, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.1 }}
                 >
                   <Github className="h-5 w-5" />
-                </a>
-                <a
+                </motion.a>
+                <motion.a
                   href="https://www.linkedin.com/in/jaini-aashish-62a202290/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-gray-400 hover:text-white transition-colors p-2 rounded-full hover:bg-white/10"
+                  whileHover={{ scale: 1.1, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.2 }}
                 >
                   <Linkedin className="h-5 w-5" />
-                </a>
+                </motion.a>
 
-                <a
+                <motion.a
+                  href="https://leetcode.com/u/aashish17405/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-white transition-colors p-2 rounded-full hover:bg-white/10"
+                  whileHover={{ scale: 1.1, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.3 }}
+                >
+                  <SiLeetcode className="h-5 w-5" />
+                </motion.a>
+
+                <motion.a
                   href="mailto:aashish17405@gmail.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-gray-400 hover:text-white transition-colors p-2 rounded-full hover:bg-white/10"
+                  whileHover={{ scale: 1.1, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.4 }}
                 >
                   <Mail className="h-5 w-5" />
-                </a>
+                </motion.a>
               </motion.div>
             </div>
           </motion.div>
