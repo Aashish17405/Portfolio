@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense } from "react";
 import HeroSection from "@/components/hero-section";
 import AboutSection from "@/components/about-section";
 import SkillsSection from "@/components/skills-section";

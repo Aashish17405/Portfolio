@@ -199,7 +199,7 @@ export default function CodeProgressBar() {
               style={{ width: `${progressPercent}%` }}
             >
               <div className="absolute top-0 left-0 w-full h-full flex items-center px-1 sm:px-2 text-xs">
-                <code className="text-gray-900 font-bold whitespace-nowrap overflow-hidden">
+                <code className="text-black font-bold whitespace-nowrap overflow-hidden">
                   {generateCodeContent()}
                 </code>
               </div>
@@ -207,7 +207,7 @@ export default function CodeProgressBar() {
 
             {/* Remaining percentage - responsive text */}
             <div className="absolute top-0 right-1 sm:right-2 h-full flex items-center">
-              <code className="text-gray-400 text-xs">
+              <code className="text-white text-xs">
                 <span className="hidden md:block">
                   {progressPercent < 100
                     ? `${100 - progressPercent}% remaining`
@@ -236,7 +236,7 @@ export default function CodeProgressBar() {
             </button>
 
             {isMenuOpen && (
-              <div className="absolute right-0 mt-2 w-36 sm:w-36 bg-gray-800 border border-gray-700 rounded-md shadow-lg z-50 max-h-80 overflow-y-auto">
+              <div className="absolute right-0 mt-2 w-36 sm:w-40 bg-gray-800 border border-gray-700 rounded-md shadow-lg z-50 max-h-80 overflow-y-auto">
                 <div className="py-1">
                   {sections.map((section) => (
                     <button
