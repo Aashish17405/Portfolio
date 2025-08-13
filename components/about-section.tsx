@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Mail, MapPin, GraduationCap, Server } from "lucide-react"
+import TextScrambleLoop from "./ui/text-scramble-effect"
 
 export default function AboutSection() {
   const fadeIn = {
@@ -49,7 +50,7 @@ export default function AboutSection() {
           transition={{ duration: 0.5 }}
           className="section-title text-gradient"
         >
-          About Me
+          <TextScrambleLoop text="About Me" />
         </motion.h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-start">
@@ -64,8 +65,7 @@ export default function AboutSection() {
                 <div className="absolute inset-0 bg-dots opacity-30 rounded-lg"></div>
                 <div className="relative">
                   <p className="text-lg mb-6">
-                    I am a passionate full-stack developer skilled in MERN, Next.js, TypeScript, Tailwind CSS, and DSA
-                    (C++), and I have experience in AI and blockchain. Enthusiastic about solving real-time problems by
+                    I am a passionate full-stack developer skilled in MERN, Next.js, TypeScript, and DSA(Java), and I have experience in AI and blockchain. Enthusiastic about solving real-time problems by
                     exploring new technologies and building scalable, impactful solutions.
                   </p>
 
@@ -82,7 +82,7 @@ export default function AboutSection() {
                       <MapPin className="h-5 w-5 text-blue-400 mt-0.5" />
                       <div>
                         <h3 className="font-medium text-white">Location</h3>
-                        <p className="text-gray-400 text-sm">India</p>
+                        <p className="text-gray-400 text-sm">Hyderabad, Telangana, India</p>
                       </div>
                     </div>
 

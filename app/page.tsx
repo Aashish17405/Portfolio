@@ -11,6 +11,7 @@ import LoadingScreen from "@/components/loading-screen";
 import Header from "@/components/header";
 import { AnimatePresence, motion } from "framer-motion";
 import CodeProgressBar from "@/components/code-progress-bar";
+import PortfolioComponent from "@/components/ui/project-component";
 
 export default function Home() {
 
@@ -30,6 +31,20 @@ export default function Home() {
               <AboutSection />
               <SkillsSection />
               <ProjectsSection />
+              {/* <PortfolioComponent 
+                title="WealthWise: Your Personal finance assisstant"
+                projectHeading="WealthWise"
+                description="A personal finance assistant that helps you manage your finances effectively."
+                imageUrl="/projects/wealthwise/image.png"
+                features={[
+                  "Real-time expense tracking",
+                  "Budget planning and analysis",
+                  "Personalized financial insights",
+                ]}
+                techstack={{"Next.js": "nextjs-icon", "TypeScript": "react-icon", "Tailwind CSS": "react-icon"}}
+                projectUrl="https://wealthwise.example.com"
+                theme="purple-500"
+              /> */}
               <ExperienceSection />
               <ContactSection />
             </Suspense>

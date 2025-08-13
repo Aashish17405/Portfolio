@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Github, Linkedin, Download, Mail } from "lucide-react";
 import Image from "next/image";
 import { SiLeetcode } from "react-icons/si";
+import Typewriter from "./ui/type-writer";
 
 export default function HeroSection() {
   return (
@@ -36,7 +37,7 @@ export default function HeroSection() {
                   transition={{ duration: 0.5, delay: 0.2 }}
                   className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4"
                 >
-                  Aashish Jaini
+                  <Typewriter />
                 </motion.h1>
                 <motion.h2
                   initial={{ opacity: 0, y: 20 }}

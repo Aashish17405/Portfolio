@@ -24,6 +24,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import TextScrambleLoop from "./ui/text-scramble-effect";
 
 interface Experience {
   title: string;
@@ -135,7 +136,10 @@ export default function ExperienceSection() {
           transition={{ duration: 0.5 }}
           className="section-title text-gradient"
         >
-          Work Experience
+          <TextScrambleLoop
+            text="Work Experience"
+            className="text-3xl font-bold"
+          />
         </motion.h2>
 
         <div className="max-w-4xl mx-auto">
@@ -168,7 +172,10 @@ export default function ExperienceSection() {
                         </div>
                         <div>
                           <h3 className="font-bold text-base md:text-lg">
-                            {experience.title}
+                            <TextScrambleLoop
+                              text={experience.title}
+                              className=""
+                            />
                           </h3>
                           <p className="text-xs md:text-sm text-gray-400">
                             {experience.company}
@@ -282,7 +289,10 @@ export default function ExperienceSection() {
           transition={{ duration: 0.5 }}
           className="section-title text-gradient"
         >
-          Achievements
+          <TextScrambleLoop
+            text="Achievements"
+            className="text-3xl font-bold"
+          />
         </motion.h2>
 
         <div className="max-w-4xl mx-auto">
@@ -315,7 +325,10 @@ export default function ExperienceSection() {
                         </div>
                         <div>
                           <h3 className="font-bold text-base md:text-lg">
-                            {achievement.title}
+                            <TextScrambleLoop
+                              text={achievement.title}
+                              className=""
+                            />
                           </h3>
                           <p className="text-xs md:text-sm text-gray-400">
                             {achievement.company}
@@ -359,7 +372,7 @@ export default function ExperienceSection() {
           transition={{ duration: 0.5, ease: "easeOut" }}
           className="section-title text-3xl md:text-4xl font-bold text-center mb-12 text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600"
         >
-          Certifications
+          <TextScrambleLoop text="Certifications" />
         </motion.h2>
 
         <motion.div

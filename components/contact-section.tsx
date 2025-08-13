@@ -19,6 +19,7 @@ import {
   Github,
 } from "lucide-react";
 import { SiLeetcode } from "react-icons/si";
+import TextScrambleLoop from "./ui/text-scramble-effect";
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -124,7 +125,7 @@ export default function ContactSection() {
           transition={{ duration: 0.5 }}
           className="section-title text-gradient"
         >
-          Get In Touch
+          <TextScrambleLoop text="Get in Touch" />
         </motion.h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">

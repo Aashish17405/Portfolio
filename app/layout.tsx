@@ -5,8 +5,9 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import BackgroundEffect from "@/components/background-effect";
-import CursorFollower from "@/components/cursor-follower";
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/next";
+import CustomCursor from "@/components/custom-cursor";
+import { CursorProvider } from "@/context/cursor-context";
 
 // Preload fonts to ensure they're available
 const inter = Inter({
@@ -51,18 +52,23 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
       </head>
-      <body className={`${inter.variable} ${spaceGrotesk.variable} font-sans`}>
+      <body
+        className={`${inter.variable} ${spaceGrotesk.variable} font-sans`}
+        suppressHydrationWarning
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          <BackgroundEffect />
-          <CursorFollower/>
-          <Analytics />
-          {children}
-          <Toaster />
+          <CursorProvider>
+            <BackgroundEffect />
+            <Analytics />
+            {children}
+            <CustomCursor />
+            <Toaster />
+          </CursorProvider>
         </ThemeProvider>
       </body>
     </html>

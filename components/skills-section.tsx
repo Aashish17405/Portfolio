@@ -1,16 +1,30 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { motion } from "framer-motion"
-import { Card, CardContent } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Code, Database, Server, Globe, Layers, GitBranch, Palette, Braces, FileCode, LayoutGrid, Cloud, Repeat } from "lucide-react"
+import { motion } from "framer-motion";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Code,
+  Database,
+  Server,
+  Globe,
+  Layers,
+  GitBranch,
+  Palette,
+  Braces,
+  FileCode,
+  LayoutGrid,
+  Cloud,
+  Repeat,
+} from "lucide-react";
+import TextScrambleLoop from "./ui/text-scramble-effect";
 
 interface SkillCategory {
-  title: string
-  icon: React.ReactNode
-  skills: { name: string; icon: React.ReactNode }[]
+  title: string;
+  icon: React.ReactNode;
+  skills: { name: string; icon: React.ReactNode }[];
 }
 
 export default function SkillsSection() {
@@ -55,7 +69,7 @@ export default function SkillsSection() {
         { name: "CI/CD", icon: <Repeat className="h-4 w-4" /> },
       ],
     },
-  ]
+  ];
 
   return (
     <section id="skills" className="relative py-0 bg-gray-900">
@@ -67,7 +81,7 @@ export default function SkillsSection() {
           transition={{ duration: 0.5 }}
           className="section-title text-gradient"
         >
-          My Skills
+          <TextScrambleLoop text="Skills" />
         </motion.h2>
 
         <Tabs defaultValue="programming" className="w-full">
@@ -93,7 +107,11 @@ export default function SkillsSection() {
               <Card className="bg-gray-800/30 border-gray-700">
                 <CardContent className="p-6">
                   <h3 className="text-xl font-bold mb-6 text-gradient flex items-center gap-2">
-                    {category.icon} {category.title}
+                    {category.icon}{" "}
+                    <TextScrambleLoop
+                      text={category.title}
+                      className="inline"
+                    />
                   </h3>
 
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -130,7 +148,9 @@ export default function SkillsSection() {
         >
           <Card className="bg-gray-800/30 border-gray-700 border-blue-500/20">
             <CardContent className="p-6">
-              <h3 className="text-xl font-bold mb-6 text-center">Tools & Technologies</h3>
+              <h3 className="text-xl font-bold mb-6 text-center">
+                <TextScrambleLoop text="Tools and Technologies" />
+              </h3>
               <div className="flex flex-wrap justify-center gap-3">
                 {[
                   "Git",
@@ -164,5 +184,5 @@ export default function SkillsSection() {
         </motion.div>
       </div>
     </section>
-  )
+  );
 }

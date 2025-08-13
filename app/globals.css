@@ -59,6 +59,13 @@
   }
 }
 
+/* Hide default cursor on desktop and show custom cursor */
+@media (min-width: 768px) {
+  * {
+    cursor: none !important;
+  }
+}
+
 .text-gradient {
   @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400;
 }
