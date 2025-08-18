@@ -2,7 +2,7 @@
 
 import type React from "react";
 import PortfolioComponent from "./ui/project-component";
-import Router from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { ArrowRight } from "lucide-react";
 
@@ -22,7 +22,7 @@ interface Project {
 }
 
 export default function ProjectsSection() {
-  const router = Router.useRouter();
+  const router = useRouter();
 
   const projects: Project[] = [
     {
