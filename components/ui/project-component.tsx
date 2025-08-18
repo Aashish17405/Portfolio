@@ -10,6 +10,10 @@ interface ProjectComponentProps {
   techstack: { [key: string]: string };
   projectUrl?: string;
   theme: string;
+  gradient_from?: string;
+  gradient_to?: string;
+  gradient_via?: string;
+  githubUrl: string;
 }
 
 const PortfolioComponent: React.FC<ProjectComponentProps> = ({
@@ -21,6 +25,10 @@ const PortfolioComponent: React.FC<ProjectComponentProps> = ({
   techstack,
   projectUrl,
   theme,
+  gradient_from,
+  gradient_to,
+  gradient_via,
+  githubUrl,
 }) => {
   const { setGlobalCursorVisible } = useCursorContext();
   const [isHovering, setIsHovering] = useState(false);
@@ -71,7 +79,7 @@ const PortfolioComponent: React.FC<ProjectComponentProps> = ({
   }, [isHovering]);
 
   return (
-    <div className="bg-black text-white px-8 pb-24 flex items-center justify-center relative overflow-hidden">
+    <div className="bg-black text-white px-4 sm:px-6 md:px-8 pb-16 md:pb-24 flex items-center justify-center relative overflow-hidden">
       <style jsx global>{`
         @keyframes rotate {
           0% {
@@ -142,15 +150,21 @@ const PortfolioComponent: React.FC<ProjectComponentProps> = ({
           </div>
         </div>
       </div>
-
-      <div className="max-w-7xl w-full flex gap-8">
+      <div className="max-w-7xl w-full flex flex-col lg:flex-row gap-8">
         {/* Left Side - Project Showcase */}
         <div className="flex-1">
           <div className="border-2 border-white/50 hover:border-white rounded-3xl transition-all duration-500 ease-in-out">
-            <div className="relative bg-gradient-to-br from-purple-600 via-purple-700 to-purple-900 rounded-3xl p-8 overflow-hidden transition-all duration-300 m-3">
+            <div
+              className="relative rounded-3xl p-4 sm:p-6 md:p-8 overflow-hidden transition-all duration-300 m-2 md:m-3"
+              style={{
+                background: `radial-gradient(circle, ${gradient_from}, ${
+                  gradient_from || gradient_to
+                }, ${gradient_to})`,
+              }}
+            >
               {/* Header Content */}
-              <div className="relative z-10 mb-8">
-                <h1 className="text-4xl font-bold text-white mb-4 leading-tight">
+              <div className="relative z-10 mb-6 md:mb-8">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 md:mb-4 leading-tight">
                   {title}
                 </h1>
               </div>
@@ -158,18 +172,16 @@ const PortfolioComponent: React.FC<ProjectComponentProps> = ({
               <div className="relative z-10">
                 <div
                   ref={cardRef}
-                  className={`bg-gray-900 rounded-2xl p-6 shadow-2xl transform transition-all duration-500 hover:scale-[1.02] cursor-none ${
-                    isHovering ? "rotate-0 -translate-y-3" : "rotate-1"
-                  } relative`}
+                  className={`bg-gray-900 rounded-2xl p-4 md:p-6 shadow-2xl transform transition-all duration-500 hover:scale-[1.02] cursor-none relative
+    ${isHovering ? "rotate-0 -translate-y-3" : "rotate-2"}`}
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
+                  onClick={() => window.open(githubUrl, "_blank")}
                 >
-                  {/* Hover overlay for better cursor detection */}
-                  <div className="absolute inset-0 rounded-2xl" />
                   <img
-                    src="/projects/wealthwise/image.png"
-                    alt="WealthWise Project Preview"
-                    className="w-full h-full object-cover rounded-2xl"
+                    src={`/projects/${imageUrl}`}
+                    alt="Project Preview"
+                    className="w-full h-auto object-cover rounded-2xl"
                   />
                 </div>
               </div>
@@ -177,45 +189,91 @@ const PortfolioComponent: React.FC<ProjectComponentProps> = ({
           </div>
         </div>
 
-        <div className="w-1/3 mt-4">
-          <div className="mb-8">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-1 h-6" style={{ backgroundColor: theme }}></div>
-              <h2 className="text-2xl font-bold">{projectHeading}</h2>
-            </div>
-            <p className="text-white/85 leading-relaxed mb-6">{description}</p>
-
-            <div className="space-y-3 mb-4">
-              {features.map((feature, index) => (
-                <div key={index} className="flex items-start gap-1">
-                  <div className="flex items-center justify-center mt-1 flex-shrink-0">
-                    <Sparkle
-                      className="w-4 h-4"
-                      style={{
-                        fill: theme,
-                        color: theme,
-                        stroke: "black",
-                        strokeWidth: "1px",
-                      }}
+        {/* Right Side - Project Details */}
+        <div className="w-full lg:w-1/3 mt-6 lg:mt-8">
+          <div className="mb-6 md:mb-8">
+            <div className="flex items-center gap-2 mb-3 md:mb-4">
+              <div
+                className="w-1 h-5 md:h-6"
+                style={{ backgroundColor: theme }}
+              ></div>
+              <h2 className="text-xl sm:text-2xl font-bold">
+                {projectHeading}
+              </h2>
+              <button
+                onClick={() =>
+                  window.open(projectUrl !== undefined ? projectUrl : githubUrl)
+                }
+                className="group text-xs sm:text-sm font-semibold text-white/80 hover:text-white border border-white/30 rounded-md px-2 py-1 sm:px-3 sm:py-1.5 flex items-center gap-2 transition-colors duration-100 relative"
+              >
+                Check out
+                <div className="relative w-4 h-4">
+                  {/* Arrow animations */}
+                  <svg
+                    className="w-4 h-4 absolute transition-all duration-500 ease-in-out group-hover:translate-x-8 group-hover:-translate-y-6 group-hover:opacity-0"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M7 17l9.2-9.2M17 17V7h-10"
                     />
-                  </div>
-                  <span className="text-gray-300">{feature}</span>
+                  </svg>
+                  <svg
+                    className="w-4 h-4 absolute transition-all duration-500 ease-in-out delay-300 -translate-x-8 translate-y-6 opacity-0 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M7 17l9.2-9.2M17 17V7h-10"
+                    />
+                  </svg>
+                </div>
+              </button>
+            </div>
+
+            <p className="text-white/85 text-sm sm:text-base leading-relaxed mb-5 md:mb-6">
+              {description}
+            </p>
+
+            <div className="space-y-2 sm:space-y-3 mb-4">
+              {features.map((feature, index) => (
+                <div key={index} className="flex items-start gap-2">
+                  <Sparkle
+                    className="w-4 h-4 mt-0.5 flex-shrink-0"
+                    style={{
+                      fill: theme,
+                      color: theme,
+                      stroke: "black",
+                      strokeWidth: "1px",
+                    }}
+                  />
+                  <span className="text-gray-300 text-sm sm:text-base">
+                    {feature}
+                  </span>
                 </div>
               ))}
             </div>
 
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-2 sm:gap-3">
               {Object.entries(techstack).map(([name, icon], index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-2 bg-gray-950 border border-white/20 rounded-xl px-3 py-1.5 hover:border-white/30"
+                  className="flex items-center gap-2 bg-gray-950 border border-white/20 rounded-xl px-2 sm:px-3 py-1 sm:py-1.5 hover:border-white/30"
                 >
                   <img
                     src={`/icons/${icon}`}
                     alt={`${name} Logo`}
-                    className="w-5 h-5 object-contain"
+                    className="w-4 h-4 sm:w-5 sm:h-5 object-contain"
                   />
-                  <span className="text-white text-sm font-semibold">
+                  <span className="text-white text-xs sm:text-sm font-semibold">
                     {name}
                   </span>
                 </div>
