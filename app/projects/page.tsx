@@ -4,6 +4,7 @@ import type React from "react";
 import PortfolioComponent from "@/components/ui/project-component";
 import { useRouter } from "next/navigation";
 import TextScrambleLoop from "@/components/ui/text-scramble-effect";
+import { useMarkInternalNavigation, markInternalNavigationToHome } from "@/hooks/use-intro-animation";
 
 interface Project {
   title: string;
@@ -22,6 +23,10 @@ interface Project {
 
 export default function ProjectsSection() {
   const router = useRouter();
+  
+  // Mark that user has navigated within the site
+  useMarkInternalNavigation();
+  
   const projects: Project[] = [
     {
       title: "WealthWise: AI-Powered Financial Planning & Investment Guide",
@@ -301,7 +306,10 @@ export default function ProjectsSection() {
           <div className="relative flex items-center justify-center mb-4">
             <button
               className="absolute left-0 flex items-center gap-2 px-3 py-2 text-white bg-gray-800 hover:bg-gray-700 rounded-lg border border-gray-600 hover:border-gray-500 transition-all duration-300 ease-in-out"
-              onClick={() => router.back()}
+              onClick={() => {
+                markInternalNavigationToHome();
+                router.back();
+              }}
             >
               <svg
                 className="w-4 h-4"
@@ -329,7 +337,10 @@ export default function ProjectsSection() {
         <div className="hidden sm:flex items-center justify-between mb-8 md:mb-12">
           <button
             className="flex items-center gap-2 px-4 py-2 text-white bg-gray-800 hover:bg-gray-700 rounded-lg border border-gray-600 hover:border-gray-500 transition-all duration-300 ease-in-out ml-8 md:ml-16"
-            onClick={() => router.back()}
+            onClick={() => {
+              markInternalNavigationToHome();
+              router.back();
+            }}
           >
             <svg
               className="w-4 h-4"
