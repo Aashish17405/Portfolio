@@ -10,7 +10,7 @@ const CustomCursor = () => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [mounted, setMounted] = useState(false);
   const { isGlobalCursorVisible } = useCursorContext();
-  console.log("CustomCursor mounted:", mounted, "Global cursor visible:", isGlobalCursorVisible);
+  // console.log("CustomCursor mounted:", mounted, "Global cursor visible:", isGlobalCursorVisible);
 
 
   useEffect(() => {
