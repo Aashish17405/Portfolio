@@ -152,7 +152,7 @@ export default function ProjectsSection() {
         Geth: "geth-icon.png",
         Twilio: "twilio-icon.webp",
       },
-      projectUrl: "",
+      projectUrl: "https://github.com/Aashish17405/BlockChain_based_Secured_Microgrid",
       githubUrl:
         "https://github.com/Aashish17405/BlockChain_based_Secured_Microgrid",
       theme: "#e11d48", // rose base
