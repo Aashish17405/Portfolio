@@ -70,7 +70,7 @@ export default function ProjectsSection() {
         Vite: "vite-icon.webp",
         TailwindCSS: "tailwind-icon.svg",
       },
-      projectUrl: "",
+      projectUrl: "https://github.com/Aashish17405/Vercel-Clone",
       githubUrl: "https://github.com/Aashish17405/Vercel-Clone",
       theme: "#dc2626", // vibrant red base
       gradient_from: "#f87171", // bright red highlight
