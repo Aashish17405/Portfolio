@@ -21,15 +21,8 @@ export const useIntroAnimation = () => {
       "portfolio-internal-nav"
     );
 
-    // Debug logging
-    console.log("Intro Animation Debug:", {
-      hasInternalNavigation,
-      localStorageValue: localStorage.getItem("portfolio-internal-nav"),
-    });
-
     if (hasInternalNavigation) {
       // User navigated back from another page - don't show intro
-      console.log("Internal navigation detected - skipping intro");
       setShowIntro(false);
       localStorage.removeItem("portfolio-internal-nav");
       return;
@@ -42,11 +35,8 @@ export const useIntroAnimation = () => {
     const navigationType =
       navigationEntries.length > 0 ? navigationEntries[0].type : "navigate";
 
-    console.log("Navigation type:", navigationType);
-
     // Show intro for both refresh and direct navigation
     if (navigationType === "reload" || navigationType === "navigate") {
-      console.log("Showing intro animation");
       setShowIntro(true);
     }
   }, []);
@@ -79,10 +69,5 @@ export const useMarkInternalNavigation = () => {
  * Use this in navigation components when linking to home
  */
 export const markInternalNavigationToHome = () => {
-  console.log("Marking internal navigation to home");
   localStorage.setItem("portfolio-internal-nav", "true");
-  console.log(
-    "LocalStorage set:",
-    localStorage.getItem("portfolio-internal-nav")
-  );
 };
