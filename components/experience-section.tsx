@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -34,6 +34,7 @@ interface Experience {
   type: "work" | "achievement";
   link?: string;
   experienceCertificate?: string;
+  image?: string;
 }
 
 interface certification {
@@ -45,6 +46,13 @@ interface certification {
 export default function ExperienceSection() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+  const [hoveredAchievement, setHoveredAchievement] = useState<number | null>(
+    null
+  );
+
+  // Debug state
+  console.log("🔍 Current hovered achievement:", hoveredAchievement);
+
   const workExperiences: Experience[] = [
     {
       title: "React Developer Intern",
@@ -79,12 +87,22 @@ export default function ExperienceSection() {
 
   const achievements: Experience[] = [
     {
+      title: "Winner at Techolution Hackathon 2025.V1",
+      company: "Techolution",
+      period: "2025",
+      description:
+        "Winner at the Techolution Hackathon 2025.V1 conducted by Techolution under the AI domain.",
+      type: "achievement",
+      image: "/achievements/techolution.jpg",
+    },
+    {
       title: "Runner-up at EPITOME25",
       company: "Gokaraju Rangaraju Institute of Engineering and Technology",
       period: "2025",
       description:
         "Runner-up at EPITOME25 conducted by Gokaraju Rangaraju Institute of Engineering and Technology under the Fintech domain.",
       type: "achievement",
+      image: "/achievements/epitome.jpg", // Changed from .png to .jpg in case the file extension is different
     },
     {
       title: "Runner-up at Code4AI",
@@ -93,6 +111,7 @@ export default function ExperienceSection() {
       description:
         "Runner-up at Code4AI conducted by Rajiv Gandhi Institute of Technology under the AI domain.",
       type: "achievement",
+      image: "/achievements/code4ai.jpg",
     },
     {
       title: "2nd Place at Zignasa2k23",
@@ -101,6 +120,7 @@ export default function ExperienceSection() {
       description:
         "Won the 2nd place at Zignasa2k23 conducted by Brain O Vision under the Smart Education domain.",
       type: "achievement",
+      image: "/achievements/zignasa.jpg", // Changed from .png to .jpg in case the file extension is different
     },
   ];
 
@@ -295,8 +315,8 @@ export default function ExperienceSection() {
           />
         </motion.h2>
 
-        <div className="max-w-4xl mx-auto">
-          <div className="relative">
+        <div className="max-w-4xl mx-auto overflow-visible">
+          <div className="relative overflow-visible">
             <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-gray-700"></div>
 
             {achievements.map((achievement, index) => (
@@ -308,16 +328,18 @@ export default function ExperienceSection() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className={`mb-8 md:mb-12 flex ${
                   index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
-                } items-start relative`}
+                } items-start relative group`}
+                onMouseEnter={() => setHoveredAchievement(index)}
+                onMouseLeave={() => setHoveredAchievement(null)}
               >
                 <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-yellow-500 border-4 border-gray-900 z-10"></div>
 
                 <div
-                  className={`w-full md:w-1/2 ${
+                  className={`relative w-full md:w-1/2 ${
                     index % 2 === 0 ? "md:pr-12" : "md:pl-12"
                   }`}
                 >
-                  <Card className="bg-gray-800/50 border-gray-700 hover:border-yellow-500/50 transition-colors card-hover">
+                  <Card className="bg-gray-800/50 border-gray-700 hover:border-yellow-500/50 transition-all duration-300 cursor-pointer">
                     <CardContent className="p-4 md:p-5">
                       <div className="flex items-start gap-3 mb-3">
                         <div className="p-2 rounded-full bg-yellow-500/20 text-yellow-400">
@@ -353,6 +375,41 @@ export default function ExperienceSection() {
                       </div>
                     </CardContent>
                   </Card>
+
+                  {/* ✅ Hover Image Preview beside the card */}
+                  {hoveredAchievement === index && achievement.image && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.3 }}
+                      className={`absolute top-[1%] transform -translate-y-1/2 z-[100] pointer-events-none ${
+                        index % 2 === 0 ? "left-full ml-12" : "right-full mr-12"
+                      }`}
+                      style={{
+                        width: "370px",
+                        height: "220px",
+                      }}
+                    >
+                      <div className="w-full h-full border-2 border-yellow-400 rounded-lg overflow-hidden shadow-2xl bg-gray-900/95 p-3">
+                        <Image
+                          src={achievement.image}
+                          alt={achievement.title}
+                          width={280}
+                          height={200}
+                          className="w-full h-full object-cover rounded-md"
+                          onLoad={() =>
+                            console.log(`✅ Image loaded: ${achievement.image}`)
+                          }
+                          onError={() =>
+                            console.log(
+                              `❌ Image failed to load: ${achievement.image}`
+                            )
+                          }
+                        />
+                      </div>
+                    </motion.div>
+                  )}
                 </div>
               </motion.div>
             ))}
