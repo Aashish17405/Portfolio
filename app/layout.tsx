@@ -8,6 +8,7 @@ import BackgroundEffect from "@/components/background-effect";
 import { Analytics } from "@vercel/analytics/next";
 import CustomCursor from "@/components/custom-cursor";
 import { CursorProvider } from "@/context/cursor-context";
+import Chatbot from "@/components/chatbot";
 
 // Preload fonts to ensure they're available
 const inter = Inter({
@@ -67,6 +68,7 @@ export default function RootLayout({
             <Analytics />
             {children}
             <CustomCursor />
+            <Chatbot />
             <Toaster />
           </CursorProvider>
         </ThemeProvider>
