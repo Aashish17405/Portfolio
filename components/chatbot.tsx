@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { X, MessageSquare, Send, Sparkles, Bot } from "lucide-react";
+import { X, MessageSquare, Send, Sparkles, Bot, Smile } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 // Small helper to render simple markdown-like text coming from the agent.
 function FormattedText({ text }: { text: string }) {
@@ -159,203 +160,183 @@ export default function Chatbot() {
   }
 
   return (
-    <div>
-      {/* Floating button with pulse animation */}
-      <button
-        aria-label={open ? "Close chat" : "Open chat"}
-        onClick={() => setOpen((s) => !s)}
-        className="fixed bottom-5 right-5 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white shadow-2xl ring-2 ring-blue-500/30 focus:outline-none focus:ring-4 transition-all duration-300 hover:scale-110 active:scale-95"
-        style={{
-          animation: open
-            ? "none"
-            : "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        }}
-      >
-        {!open ? (
-          <MessageSquare className="w-6 h-6 transition-transform duration-300" />
-        ) : (
-          <X className="w-6 h-6 transition-transform duration-300 rotate-90" />
-        )}
-      </button>
-
-      {/* Chat popup with slide-in animation */}
-      {open && (
-        <div
-          className="fixed bottom-20 right-5 z-50 w-[92vw] max-w-xs md:max-w-md bg-gray-900 border border-gray-700 rounded-xl shadow-2xl overflow-hidden"
-          style={{
-            animation: "slideIn 0.3s ease-out",
-          }}
-        >
-          {/* Header with gradient */}
-          <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 border-b border-blue-500/30">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <h3 className="text-sm font-semibold text-white">Chat with me</h3>
-            </div>
-            <button
-              aria-label="Close chat"
-              onClick={() => setOpen(false)}
-              className="text-white/80 hover:text-white p-1 rounded transition-colors duration-200 hover:bg-white/10"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-
-          {/* Messages area */}
-          <div
-            ref={listRef}
-            className="h-56 overflow-y-auto px-3 py-3 space-y-3 bg-gradient-to-b from-gray-900 to-gray-950"
+    <>
+      {/* Floating button */}
+      <AnimatePresence>
+        {!open && (
+          <motion.button
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setOpen(true)}
+            className="fixed bottom-5 right-5 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-blue-600 text-white shadow-xl hover:bg-blue-700 focus:outline-none focus:ring-4 ring-blue-500/30"
           >
-            {messages.length === 0 && (
-              <div
-                className="text-center py-8 space-y-2"
-                style={{
-                  animation: "fadeIn 0.5s ease-out",
-                }}
-              >
-                <Bot className="w-8 h-8 text-blue-500 mx-auto mb-2" />
-                <p className="text-xs text-gray-400 px-2">Say hi 👋</p>
-                <p className="text-xs text-gray-500 px-2">
-                  Ask about my projects or experience
-                </p>
-              </div>
-            )}
+            <MessageSquare className="w-6 h-6" />
+          </motion.button>
+        )}
+      </AnimatePresence>
 
-            {messages.map((m, i) => (
-              <div
-                key={m.id}
-                className={`flex ${
-                  m.from === "user" ? "justify-end" : "justify-start"
-                }`}
-                style={{
-                  animation: `messageSlide 0.3s ease-out ${
-                    i * 0.05
-                  }s backwards`,
-                }}
-              >
-                <div
-                  className={`max-w-[80%] px-3 py-2 rounded-lg text-sm shadow-md ${
-                    m.from === "user"
-                      ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-br-none"
-                      : "bg-gray-800 text-gray-200 rounded-bl-none border border-gray-700"
-                  }`}
-                >
-                  {m.from === "bot" ? <FormattedText text={m.text} /> : m.text}
-                </div>
-              </div>
-            ))}
-
-            {/* Typing indicator */}
-            {isTyping && (
-              <div
-                className="flex justify-start"
-                style={{
-                  animation: "fadeIn 0.3s ease-out",
-                }}
-              >
-                <div className="bg-gray-800 border border-gray-700 px-4 py-3 rounded-lg rounded-bl-none shadow-md">
-                  <div className="flex gap-1">
-                    <div
-                      className="w-1.5 h-1.5 bg-blue-400 rounded-full"
-                      style={{
-                        animation: "bounce 1.4s ease-in-out infinite",
-                      }}
-                    ></div>
-                    <div
-                      className="w-1.5 h-1.5 bg-blue-400 rounded-full"
-                      style={{
-                        animation: "bounce 1.4s ease-in-out 0.2s infinite",
-                      }}
-                    ></div>
-                    <div
-                      className="w-1.5 h-1.5 bg-blue-400 rounded-full"
-                      style={{
-                        animation: "bounce 1.4s ease-in-out 0.4s infinite",
-                      }}
-                    ></div>
+      {/* Chat popup */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            className="fixed bottom-5 left-0 right-0 md:left-auto md:right-5 mx-auto md:mx-0 z-50 w-[95vw] md:w-[400px] max-w-[95vw] h-[70vh] md:h-[600px] bg-gray-900/95 backdrop-blur-xl border border-gray-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between px-4 py-4 bg-gray-900 border-b border-gray-800">
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-gray-900 rounded-full"></span>
+                  <div className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center border border-gray-700">
+                    <Bot className="w-5 h-5 text-blue-400" />
                   </div>
                 </div>
+                <div>
+                  <h3 className="text-sm font-bold text-white">AI Assistant</h3>
+                  <p className="text-[11px] text-gray-400 font-medium">
+                    Online & Ready
+                  </p>
+                </div>
               </div>
-            )}
-          </div>
-
-          {/* Input area */}
-          <div className="px-3 py-3 border-t border-gray-800 bg-gray-900">
-            <div className="flex gap-2">
-              <input
-                ref={inputRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={onKeyDown}
-                placeholder="Type a message..."
-                disabled={isTyping}
-                className="flex-1 bg-gray-800 border border-gray-700 text-sm rounded-lg px-3 py-2 text-gray-200 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              />
-              <button
-                onClick={sendMessage}
-                disabled={!input.trim() || isTyping}
-                className="bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:from-gray-700 disabled:to-gray-700 disabled:cursor-not-allowed text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 active:scale-95 disabled:scale-100 disabled:opacity-50 flex items-center gap-1 shadow-md"
+              <motion.button
+                whileHover={{ scale: 1.1, rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setOpen(false)}
+                className="text-gray-400 hover:text-white p-2 rounded-full hover:bg-gray-800 transition-colors"
               >
-                <Send className="w-4 h-4" />
-              </button>
+                <X className="w-5 h-5" />
+              </motion.button>
             </div>
-          </div>
-        </div>
-      )}
 
-      <style jsx>{`
-        @keyframes pulse {
-          0%,
-          100% {
-            box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
-          }
-          50% {
-            box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
-          }
-        }
+            {/* Messages area */}
+            <div
+              ref={listRef}
+              className="flex-1 overflow-y-auto px-4 py-4 space-y-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent"
+            >
+              {messages.length === 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="h-full flex flex-col items-center justify-center text-center space-y-4"
+                >
+                  <div className="w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center mb-2 border border-gray-700">
+                    <Smile className="w-8 h-8 text-blue-400" />
+                  </div>
+                  <div>
+                    <p className="text-lg font-semibold text-white">
+                      Hello there! 👋
+                    </p>
+                    <p className="text-sm text-gray-400 max-w-[200px] mx-auto mt-1">
+                      I'm here to help you explore my portfolio. Ask me anything!
+                    </p>
+                  </div>
+                </motion.div>
+              )}
 
-        @keyframes slideIn {
-          from {
-            opacity: 0;
-            transform: translateY(20px) scale(0.95);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-          }
-        }
+              <AnimatePresence initial={false}>
+                {messages.map((m) => (
+                  <motion.div
+                    key={m.id}
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    className={`flex ${
+                      m.from === "user" ? "justify-end" : "justify-start"
+                    }`}
+                  >
+                    <div
+                      className={`max-w-[85%] px-4 py-3 rounded-2xl text-sm shadow-sm ${
+                        m.from === "user"
+                          ? "bg-blue-600 text-white rounded-br-sm"
+                          : "bg-gray-800 text-gray-200 rounded-bl-sm border border-gray-700"
+                      }`}
+                    >
+                      {m.from === "bot" ? (
+                        <FormattedText text={m.text} />
+                      ) : (
+                        m.text
+                      )}
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
 
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
+              {/* Typing indicator */}
+              {isTyping && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  className="flex justify-start"
+                >
+                  <div className="bg-gray-800 border border-gray-700 px-4 py-3 rounded-2xl rounded-bl-sm shadow-sm">
+                    <div className="flex gap-1.5">
+                      <motion.div
+                        animate={{ y: [0, -5, 0] }}
+                        transition={{
+                          duration: 0.6,
+                          repeat: Infinity,
+                          delay: 0,
+                        }}
+                        className="w-1.5 h-1.5 bg-blue-400 rounded-full"
+                      />
+                      <motion.div
+                        animate={{ y: [0, -5, 0] }}
+                        transition={{
+                          duration: 0.6,
+                          repeat: Infinity,
+                          delay: 0.2,
+                        }}
+                        className="w-1.5 h-1.5 bg-blue-400 rounded-full"
+                      />
+                      <motion.div
+                        animate={{ y: [0, -5, 0] }}
+                        transition={{
+                          duration: 0.6,
+                          repeat: Infinity,
+                          delay: 0.4,
+                        }}
+                        className="w-1.5 h-1.5 bg-blue-400 rounded-full"
+                      />
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </div>
 
-        @keyframes messageSlide {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes bounce {
-          0%,
-          60%,
-          100% {
-            transform: translateY(0);
-          }
-          30% {
-            transform: translateY(-8px);
-          }
-        }
-      `}</style>
-    </div>
+            {/* Input area */}
+            <div className="p-4 border-t border-gray-800 bg-gray-900">
+              <div className="flex gap-3 items-center bg-gray-800 border border-gray-700 rounded-full px-4 py-2 focus-within:ring-2 focus-within:ring-blue-500/50 focus-within:border-blue-500/50 transition-all duration-300">
+                <input
+                  ref={inputRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={onKeyDown}
+                  placeholder="Type a message..."
+                  disabled={isTyping}
+                  className="flex-1 bg-transparent text-sm text-gray-200 placeholder:text-gray-500 focus:outline-none disabled:opacity-50"
+                />
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={sendMessage}
+                  disabled={!input.trim() || isTyping}
+                  className="p-2 rounded-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-700 text-white transition-colors flex items-center justify-center shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Send className="w-4 h-4" />
+                </motion.button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
