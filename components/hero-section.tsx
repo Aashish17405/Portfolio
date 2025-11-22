@@ -11,7 +11,7 @@ export default function HeroSection() {
   return (
     <section
       id="intro"
-      className="relative min-h-screen flex items-center pt-20"
+      className="relative min-h-screen flex items-center pt-20 pb-20"
     >
       <div className="section-container">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
