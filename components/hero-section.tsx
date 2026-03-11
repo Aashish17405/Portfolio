@@ -164,7 +164,7 @@ export default function HeroSection() {
                 <div className="absolute inset-0 bg-grid opacity-20"></div>
                 <div className="h-full w-full rounded-xl overflow-hidden relative">
                   <Image
-                    src="/profile.png"
+                    src="/profile.jpg"
                     alt="Aashish Jaini"
                     fill
                     className="object-cover"

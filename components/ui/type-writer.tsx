@@ -13,8 +13,8 @@ export default function Typewriter() {
   const words = [
     "Aashish Jaini",
     "Problem Solver",
-    "MERN Stack Dev",
-    "Next.js Dev",
+    "Full Stack Dev",
+    "AI Developer",
   ];
   const [text, setText] = useState("");
   const [wordIndex, setWordIndex] = useState(0);
