@@ -33,7 +33,7 @@ export default function ContactSection() {
   const { toast } = useToast();
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -125,7 +125,7 @@ export default function ContactSection() {
           transition={{ duration: 0.5 }}
           className="section-title text-gradient"
         >
-          <TextScrambleLoop text="Get in Touch" />
+          <TextScrambleLoop text="Say Hi, Don't Be Shy" />
         </motion.h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -220,7 +220,7 @@ export default function ContactSection() {
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
-                        placeholder="John Doe"
+                        placeholder="Ashish Chanchlani"
                         className="bg-gray-800/50 border-gray-700 focus:border-blue-500"
                         required
                       />
@@ -235,7 +235,7 @@ export default function ContactSection() {
                         type="email"
                         value={formData.email}
                         onChange={handleChange}
-                        placeholder="john@example.com"
+                        placeholder="founder@nextbigthing.ai"
                         className="bg-gray-800/50 border-gray-700 focus:border-blue-500"
                         required
                       />

@@ -295,7 +295,10 @@ export default function ExperienceSection() {
                           rel="noopener noreferrer"
                           className="inline-block transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-900 rounded-md"
                         >
-                          <Badge className="bg-gradient-to-r from-blue-600 to-blue-400 text-white border-0 text-xs md:text-sm px-3 py-1 shadow-md shadow-blue-500/20 flex items-center gap-1 font-medium">
+                          <Badge
+                            variant="outline"
+                            className="bg-gradient-to-r from-blue-600 to-blue-400 text-white border-0 text-xs md:text-sm px-3 py-1 shadow-md shadow-blue-500/20 flex items-center gap-1 font-medium hover:from-blue-600 hover:to-blue-400"
+                          >
                             <span>Work</span>
                             <ArrowUpRight className="h-3.5 w-3.5 md:h-4 md:w-4 stroke-[2.5]" />
                           </Badge>
@@ -352,7 +355,7 @@ export default function ExperienceSection() {
                     index % 2 === 0 ? "md:pr-12" : "md:pl-12"
                   }`}
                 >
-                  <Card className="bg-gray-800/50 border-gray-700 hover:border-yellow-500/50 transition-all duration-300 cursor-pointer">
+                  <Card className="bg-gray-800/50 border-gray-700 hover:border-yellow-500/50 transition-all duration-300 cursor-none">
                     <CardContent className="p-4 md:p-5">
                       <div className="flex items-start gap-3 mb-3">
                         <div className="p-2 rounded-full bg-yellow-500/20 text-yellow-400">
@@ -382,7 +385,13 @@ export default function ExperienceSection() {
                         >
                           {achievement.period}
                         </Badge>
-                        <Badge className="bg-yellow-500/80 text-white border-0 text-xs md:text-sm">
+                        <span className="hidden md:inline-flex text-xs text-yellow-300/80 transition-colors group-hover:text-yellow-200">
+                          Hover to preview 🙂
+                        </span>
+                        <Badge
+                          variant="outline"
+                          className="bg-yellow-500/80 text-white border-0 text-xs md:text-sm hover:bg-yellow-500/80"
+                        >
                           Achievement
                         </Badge>
                       </div>

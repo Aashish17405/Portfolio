@@ -29,7 +29,7 @@ export default function HeroSection() {
                   transition={{ duration: 0.5, delay: 0.1 }}
                   className="text-blue-500 font-medium mb-2"
                 >
-                  Hello, I'm
+                  Hey, I'm Aashish
                 </motion.p>
                 <motion.h1
                   initial={{ opacity: 0, y: 20 }}
@@ -45,7 +45,7 @@ export default function HeroSection() {
                   transition={{ duration: 0.5, delay: 0.3 }}
                   className="text-xl md:text-2xl text-gradient font-semibold"
                 >
-                  Full-Stack Developer & AI Enthusiast
+                  Engineer across AI, Web, and Cloud Systems
                 </motion.h2>
               </div>
 
@@ -55,10 +55,10 @@ export default function HeroSection() {
                 transition={{ duration: 0.5, delay: 0.4 }}
                 className="text-gray-300 max-w-lg"
               >
-                I'm passionate about creating innovative solutions using
-                cutting-edge technologies. With expertise in MERN stack,
-                Next.js, and AI integration, I build applications that are both
-                powerful and user-friendly.
+                I enjoy building practical, high-impact solutions across product
+                layers. From AI-powered features and backend services to modern
+                web apps and cloud deployments, I build systems that are
+                reliable, scalable, and user-centered.
               </motion.p>
 
               <motion.div
