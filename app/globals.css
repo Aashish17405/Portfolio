@@ -59,10 +59,20 @@
   }
 }
 
-/* Hide default cursor on desktop and show custom cursor */
-@media (min-width: 768px) {
-  * {
-    cursor: none !important;
+/* Show custom cursor only on large fine-pointer screens */
+@media (min-width: 768px) and (hover: hover) and (pointer: fine) {
+  body,
+  a,
+  button,
+  [role="button"],
+  .hoverable {
+    cursor: none;
+  }
+
+  input,
+  textarea,
+  [contenteditable="true"] {
+    cursor: text;
   }
 }
 

@@ -34,7 +34,7 @@ export default function CodeProgressBar() {
       // Map our predefined sections to actual DOM elements
       const sectionElements = Array.from(allSections)
         .filter((element) =>
-          sections.some((section) => section.id === element.id)
+          sections.some((section) => section.id === element.id),
         )
         .map((element) => ({
           id: element.id,
@@ -91,7 +91,7 @@ export default function CodeProgressBar() {
 
         // Find the index of the current section in the sorted sections array
         const currentIndex = sectionElements.findIndex(
-          (section) => section.id === currentlyInView
+          (section) => section.id === currentlyInView,
         );
 
         // Get all sections up to and including the current one
@@ -121,16 +121,16 @@ export default function CodeProgressBar() {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Element;
-      if (!target.closest('[data-dropdown]')) {
+      if (!target.closest("[data-dropdown]")) {
         setIsMenuOpen(false);
       }
     };
 
     if (isMenuOpen) {
-      document.addEventListener('click', handleClickOutside);
+      document.addEventListener("click", handleClickOutside);
     }
 
-    return () => document.removeEventListener('click', handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
   }, [isMenuOpen]);
 
   const progressPercent = Math.round(scrollProgress * 100);
@@ -150,7 +150,15 @@ export default function CodeProgressBar() {
           return (
             <span key={index} className="opacity-90">
               {"{"}
-              {section && section.name}
+              {section && (
+                <button
+                  onClick={() => scrollToSection(sectionId)}
+                  className="hover:text-white hover:underline transition-all cursor-pointer"
+                  aria-label={`Scroll to ${section.name}`}
+                >
+                  {section.name}
+                </button>
+              )}
               {/* Add closing brace if: 
                   1. This is not the current section, OR
                   2. This is the last section AND we've reached 100% progress */}
@@ -250,7 +258,9 @@ export default function CodeProgressBar() {
                     >
                       <span className="">{section.name}</span>
                       {currentSection === section.id && (
-                        <span className="float-right text-xs opacity-75">•</span>
+                        <span className="float-right text-xs opacity-75">
+                          •
+                        </span>
                       )}
                     </button>
                   ))}

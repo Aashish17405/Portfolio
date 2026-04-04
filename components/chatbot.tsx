@@ -32,7 +32,7 @@ function FormattedText({ text }: { text: string }) {
               {renderInline(it)}
             </li>
           ))}
-        </ol>
+        </ol>,
       );
       continue;
     }
@@ -44,7 +44,7 @@ function FormattedText({ text }: { text: string }) {
       content.push(
         <p className="m-0 text-sm leading-snug" key={i}>
           {renderInline(line)}
-        </p>
+        </p>,
       );
     }
     i++;
@@ -68,7 +68,7 @@ function renderInline(text: string): React.ReactNode {
     parts.push(
       <strong key={"b" + key} className="font-semibold">
         {match[1]}
-      </strong>
+      </strong>,
     );
     lastIndex = idx + match[0].length;
     key++;
@@ -80,6 +80,7 @@ function renderInline(text: string): React.ReactNode {
 }
 
 export default function Chatbot() {
+  const [showText, setShowText] = useState(false);
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<
@@ -88,6 +89,12 @@ export default function Chatbot() {
   const [isTyping, setIsTyping] = useState(false);
   const listRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShowText(true);
+    }, 10000);
+  }, []);
 
   useEffect(() => {
     // Auto-scroll to bottom when messages update
@@ -144,7 +151,7 @@ export default function Chatbot() {
           ...cur,
           {
             from: "bot",
-            text: "Sorry — something went wrong.",
+            text: "Sorry - something went wrong.",
             id: Date.now(),
           },
         ]);
@@ -168,12 +175,60 @@ export default function Chatbot() {
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => setOpen(true)}
-            className="fixed bottom-5 right-5 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-blue-600 text-white shadow-xl hover:bg-blue-700 focus:outline-none focus:ring-4 ring-blue-500/30"
+            className="fixed bottom-4 right-4 md:bottom-5 md:right-5 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 text-white shadow-2xl hover:from-blue-600 hover:to-blue-800 focus:outline-none focus:ring-4 ring-blue-500/30 cursor-none"
           >
-            <MessageSquare className="w-6 h-6" />
+            {/* animated outer ring */}
+            <span
+              className="absolute inset-0 rounded-full ring-2 ring-blue-500/20 animate-pulse-slow"
+              aria-hidden
+            />
+            {/* Animated teaser tooltip */}
+            {showText && (
+              <motion.div
+                initial={{ opacity: 0, x: 20, scale: 0.9 }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                  scale: 1,
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 15,
+                }}
+                className="absolute -top-14 right-0 hidden md:block"
+              >
+                <div className="relative bg-gradient-to-br from-gray-900/95 via-blue-900/20 to-gray-900/95 border border-blue-500/30 rounded-xl px-3 py-2 shadow-2xl backdrop-blur-md">
+                  {/* Content */}
+                  <div className="relative flex items-center gap-2">
+                    <motion.div
+                      animate={{
+                        rotate: [0, 10, -10, 0],
+                        scale: [1, 1.1, 1],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        repeatDelay: 1,
+                      }}
+                      className="flex-shrink-0 w-5 h-5 rounded-full bg-gray-50 flex items-center justify-center shadow-lg"
+                    >
+                      {/* <Sparkles className="w-3.5 h-3.5 text-white" /> */}
+                      <span className="text-lg">😊</span>
+                    </motion.div>
+                    <p className="text-xs font-semibold bg-clip-text text-gray-300 bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap">
+                      Know more about me
+                    </p>
+                  </div>
+
+                  {/* Arrow pointing to button */}
+                  <div className="absolute -bottom-1.5 right-5 w-3 h-3 bg-gray-900 border-r border-b border-blue-500/30 transform rotate-45" />
+                </div>
+              </motion.div>
+            )}
+            <MessageSquare className="w-6 h-6 z-10 hover:scale-115 ease-in-out transition-transform cursor-none" />
           </motion.button>
         )}
       </AnimatePresence>
@@ -226,15 +281,17 @@ export default function Chatbot() {
                   transition={{ delay: 0.2 }}
                   className="h-full flex flex-col items-center justify-center text-center space-y-4"
                 >
-                  <div className="w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center mb-2 border border-gray-700">
-                    <Smile className="w-8 h-8 text-blue-400" />
+                  <div className="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center mb-2 border border-gray-700">
+                    {/* <Smile className="w-8 h-8 text-blue-400" /> */}
+                    <span className="text-2xl">😁</span>
                   </div>
                   <div>
                     <p className="text-lg font-semibold text-white">
-                      Hello there! 👋
+                      Hello there!
                     </p>
                     <p className="text-sm text-gray-400 max-w-[200px] mx-auto mt-1">
-                      I'm here to help you explore my portfolio. Ask me anything!
+                      I'm here to help you explore my portfolio. Ask me
+                      anything!
                     </p>
                   </div>
                 </motion.div>
@@ -244,17 +301,28 @@ export default function Chatbot() {
                 {messages.map((m) => (
                   <motion.div
                     key={m.id}
-                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    initial={{ opacity: 0, y: 10, scale: 0.96 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                    transition={{ type: "spring", stiffness: 450, damping: 28 }}
                     className={`flex ${
                       m.from === "user" ? "justify-end" : "justify-start"
                     }`}
                   >
-                    <div
+                    <motion.div
+                      whileHover={
+                        m.from === "user"
+                          ? { scale: 1.03 }
+                          : {
+                              y: -4,
+                              boxShadow: "0 8px 24px rgba(99,102,241,0.12)",
+                            }
+                      }
+                      whileTap={{ scale: 0.98 }}
+                      transition={{ type: "spring", stiffness: 300 }}
                       className={`max-w-[85%] px-4 py-3 rounded-2xl text-sm shadow-sm ${
                         m.from === "user"
-                          ? "bg-blue-600 text-white rounded-br-sm"
+                          ? "bg-gradient-to-br from-blue-600 to-blue-500 text-white rounded-br-sm"
                           : "bg-gray-800 text-gray-200 rounded-bl-sm border border-gray-700"
                       }`}
                     >
@@ -263,7 +331,7 @@ export default function Chatbot() {
                       ) : (
                         m.text
                       )}
-                    </div>
+                    </motion.div>
                   </motion.div>
                 ))}
               </AnimatePresence>

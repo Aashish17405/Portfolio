@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -47,8 +47,9 @@ export default function ExperienceSection() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [hoveredAchievement, setHoveredAchievement] = useState<number | null>(
-    null
+    null,
   );
+  const [imagesPreloaded, setImagesPreloaded] = useState(false);
 
   // Debug state
   console.log("🔍 Current hovered achievement:", hoveredAchievement);
@@ -141,6 +142,18 @@ export default function ExperienceSection() {
       // badge: "/git-badge.png", // optional
     },
   ];
+
+  // Preload achievement images for instant display on hover
+  useEffect(() => {
+    achievements.forEach((achievement) => {
+      if (achievement.image) {
+        const img = new window.Image();
+        img.src = achievement.image;
+        img.onload = () => console.log(`✅ Preloaded: ${achievement.image}`);
+      }
+    });
+    setImagesPreloaded(true);
+  }, []);
 
   return (
     <section className="relative py-0 pb-4 bg-gray-900">
@@ -282,7 +295,10 @@ export default function ExperienceSection() {
                           rel="noopener noreferrer"
                           className="inline-block transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-900 rounded-md"
                         >
-                          <Badge className="bg-gradient-to-r from-blue-600 to-blue-400 text-white border-0 text-xs md:text-sm px-3 py-1 shadow-md shadow-blue-500/20 flex items-center gap-1 font-medium">
+                          <Badge
+                            variant="outline"
+                            className="bg-gradient-to-r from-blue-600 to-blue-400 text-white border-0 text-xs md:text-sm px-3 py-1 shadow-md shadow-blue-500/20 flex items-center gap-1 font-medium hover:from-blue-600 hover:to-blue-400"
+                          >
                             <span>Work</span>
                             <ArrowUpRight className="h-3.5 w-3.5 md:h-4 md:w-4 stroke-[2.5]" />
                           </Badge>
@@ -339,7 +355,7 @@ export default function ExperienceSection() {
                     index % 2 === 0 ? "md:pr-12" : "md:pl-12"
                   }`}
                 >
-                  <Card className="bg-gray-800/50 border-gray-700 hover:border-yellow-500/50 transition-all duration-300 cursor-pointer">
+                  <Card className="bg-gray-800/50 border-gray-700 hover:border-yellow-500/50 transition-all duration-300 cursor-none">
                     <CardContent className="p-4 md:p-5">
                       <div className="flex items-start gap-3 mb-3">
                         <div className="p-2 rounded-full bg-yellow-500/20 text-yellow-400">
@@ -369,7 +385,13 @@ export default function ExperienceSection() {
                         >
                           {achievement.period}
                         </Badge>
-                        <Badge className="bg-yellow-500/80 text-white border-0 text-xs md:text-sm">
+                        <span className="hidden md:inline-flex text-xs text-yellow-300/80 transition-colors group-hover:text-yellow-200">
+                          Hover to preview 🙂
+                        </span>
+                        <Badge
+                          variant="outline"
+                          className="bg-yellow-500/80 text-white border-0 text-xs md:text-sm hover:bg-yellow-500/80"
+                        >
                           Achievement
                         </Badge>
                       </div>
@@ -377,39 +399,51 @@ export default function ExperienceSection() {
                   </Card>
 
                   {/* ✅ Hover Image Preview beside the card */}
-                  {hoveredAchievement === index && achievement.image && (
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                      transition={{ duration: 0.3 }}
-                      className={`absolute top-[1%] transform -translate-y-1/2 z-[100] pointer-events-none ${
-                        index % 2 === 0 ? "left-full ml-12" : "right-full mr-12"
-                      }`}
-                      style={{
-                        width: "370px",
-                        height: "220px",
-                      }}
-                    >
-                      <div className="w-full h-full border-2 border-yellow-400 rounded-lg overflow-hidden shadow-2xl bg-gray-900/95 p-3">
-                        <Image
-                          src={achievement.image}
-                          alt={achievement.title}
-                          width={280}
-                          height={200}
-                          className="w-full h-full object-cover rounded-md"
-                          onLoad={() =>
-                            console.log(`✅ Image loaded: ${achievement.image}`)
-                          }
-                          onError={() =>
-                            console.log(
-                              `❌ Image failed to load: ${achievement.image}`
-                            )
-                          }
-                        />
-                      </div>
-                    </motion.div>
-                  )}
+                  <AnimatePresence mode="wait">
+                    {hoveredAchievement === index && achievement.image && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                        transition={{
+                          duration: 0.2,
+                          ease: [0.4, 0, 0.2, 1],
+                        }}
+                        className={`absolute top-[1%] transform -translate-y-1/2 z-[100] pointer-events-none ${
+                          index % 2 === 0
+                            ? "left-full ml-12"
+                            : "right-full mr-12"
+                        }`}
+                        style={{
+                          width: "370px",
+                          height: "220px",
+                        }}
+                      >
+                        <div className="w-full h-full border-2 border-yellow-400 rounded-lg overflow-hidden shadow-2xl bg-gray-900/95 p-3">
+                          <Image
+                            src={achievement.image}
+                            alt={achievement.title}
+                            width={350}
+                            height={200}
+                            className="w-full h-full object-cover rounded-md"
+                            loading="eager"
+                            quality={90}
+                            unoptimized={false}
+                            onLoad={() =>
+                              console.log(
+                                `✅ Image displayed: ${achievement.image}`,
+                              )
+                            }
+                            onError={() =>
+                              console.log(
+                                `❌ Image failed: ${achievement.image}`,
+                              )
+                            }
+                          />
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </motion.div>
             ))}

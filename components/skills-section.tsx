@@ -35,7 +35,7 @@ export default function SkillsSection() {
       skills: [
         { name: "JavaScript", icon: <Braces className="h-4 w-4" /> },
         { name: "TypeScript", icon: <FileCode className="h-4 w-4" /> },
-        { name: "C++", icon: <Code className="h-4 w-4" /> },
+        { name: "Python", icon: <Code className="h-4 w-4" /> },
         { name: "Java", icon: <Code className="h-4 w-4" /> },
       ],
     },
@@ -55,18 +55,18 @@ export default function SkillsSection() {
       skills: [
         { name: "Node.js", icon: <Server className="h-4 w-4" /> },
         { name: "Express.js", icon: <Server className="h-4 w-4" /> },
-        { name: "MongoDB", icon: <Database className="h-4 w-4" /> },
-        { name: "PostgreSQL", icon: <Database className="h-4 w-4" /> },
+        { name: "FastAPI", icon: <Database className="h-4 w-4" /> },
+        { name: "tRPC", icon: <Database className="h-4 w-4" /> },
       ],
     },
     {
-      title: "Tools & Technologies",
+      title: "Cloud & Deployment",
       icon: <Layers className="h-5 w-5" />,
       skills: [
-        { name: "Git & GitHub", icon: <GitBranch className="h-4 w-4" /> },
-        { name: "AWS", icon: <Cloud className="h-4 w-4" /> },
-        { name: "Prisma", icon: <Database className="h-4 w-4" /> },
-        { name: "CI/CD", icon: <Repeat className="h-4 w-4" /> },
+        { name: "AWS S3", icon: <Cloud className="h-4 w-4" /> },
+        { name: "AWS EC2", icon: <Server className="h-4 w-4" /> },
+        { name: "Docker", icon: <Repeat className="h-4 w-4" /> },
+        { name: "Vercel", icon: <GitBranch className="h-4 w-4" /> },
       ],
     },
   ];
@@ -149,22 +149,18 @@ export default function SkillsSection() {
           <Card className="bg-gray-800/30 border-gray-700 border-blue-500/20">
             <CardContent className="p-6">
               <h3 className="text-xl font-bold mb-6 text-center">
-                <TextScrambleLoop text="Tools and Technologies" />
+                <TextScrambleLoop text="AI & Developer Tooling" />
               </h3>
               <div className="flex flex-wrap justify-center gap-3">
                 {[
                   "Git",
                   "GitHub",
                   "Postman",
+                  "LangChain",
+                  "CrewAI",
+                  "FastMCP",
                   "Gemini",
                   "ChatGPT",
-                  "Vercel",
-                  "Netlify",
-                  "Render",
-                  "Langchain",
-                  "Flask",
-                  "Docker",
-                  "AWS",
                 ].map((tool, index) => (
                   <motion.div
                     key={index}

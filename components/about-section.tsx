@@ -23,8 +23,8 @@ export default function AboutSection() {
     {
       degree: "B.Tech Computer Science and Engineering",
       institution: "Keshav Memorial Institute Of Technology",
-      period: "Nov 2022 - June 2026",
-      grade: "CGPA: 9.0/10.0",
+      period: "Nov 2022 - Feb 2026",
+      grade: "CGPA: 8.5/10.0",
     },
     {
       degree: "Intermediate Education",
@@ -50,7 +50,7 @@ export default function AboutSection() {
           transition={{ duration: 0.5 }}
           className="section-title text-gradient"
         >
-          <TextScrambleLoop text="About Me" />
+          <TextScrambleLoop text="My Professional Side" />
         </motion.h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-start">
@@ -64,14 +64,14 @@ export default function AboutSection() {
               <div className="relative bg-gray-800 border border-gray-700 rounded-lg p-6 shadow-lg h-full">
                 <div className="absolute inset-0 bg-dots opacity-30 rounded-lg"></div>
                 <div className="relative">
-                  <p className="text-lg mb-6">
-                    I am a passionate full-stack developer skilled in MERN,
-                    Next.js, TypeScript, and DSA(Java), and I have experience in
-                    AI and blockchain. Enthusiastic about solving real-time
-                    problems by exploring new technologies and building
-                    scalable, impactful solutions.
+                  <p className="text-md mb-6">
+                    I am a developer who works on making software systems that
+                    can grow and make a difference. I have worked on both
+                    full-stack development and applied AI. I like using my
+                    strong backend skills and modern web technologies to solve
+                    real-world problems. I'm always looking for new ways to use
+                    intelligent systems in real-life situations.
                   </p>
-
                   <div className="space-y-4">
                     <div className="flex items-start gap-3">
                       <Mail className="h-5 w-5 text-blue-400 mt-0.5" />
@@ -105,21 +105,19 @@ export default function AboutSection() {
                   </div>
 
                   <div className="mt-6">
-                    <h3 className="font-medium mb-3">Tech Stack</h3>
+                    <h3 className="font-medium mb-3">Core Areas</h3>
                     <div className="flex flex-wrap gap-2">
                       {[
-                        "React",
-                        "Next.js",
+                        "AI Engineering",
+                        "LLM Apps (RAG / Agents)",
+                        "Full-Stack Web Development",
+                        "Backend APIs",
+                        "React + Next.js",
+                        "Node.js + Express",
                         "TypeScript",
-                        "Node.js",
-                        "MongoDB",
-                        "Express",
-                        "Tailwind CSS",
-                        "C++",
-                        "AI",
-                        "Blockchain",
-                        "AWS S3",
-                        "AWS EC2",
+                        "PostgreSQL",
+                        "AWS EC2 & S3",
+                        "DevOps Practices (CI/CD, Docker)",
                       ].map((tech, index) => (
                         <Badge
                           key={tech}
@@ -175,3 +173,4 @@ export default function AboutSection() {
     </section>
   );
 }
+

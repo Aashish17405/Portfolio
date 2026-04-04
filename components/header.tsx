@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { markInternalNavigationToHome } from "@/hooks/use-intro-animation";
+import { HoverEffectNav } from "@/components/ui/card-hover-effect";
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -14,7 +15,7 @@ export default function Header() {
   const pathname = usePathname();
 
   const menuItems = [
-    { id: "hero", label: "Home" },
+    { id: "intro", label: "Home" },
     { id: "about", label: "About" },
     { id: "skills", label: "Skills" },
     { id: "projects", label: "Projects" },
@@ -63,32 +64,29 @@ export default function Header() {
         }`}
       >
         <div className="container mx-auto px-4 flex justify-between items-center">
-          <motion.div
+          <motion.button
+            type="button"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
             className="text-xl font-bold text-gradient"
+            onClick={() => scrollToSection("intro")}
           >
             Aashish Jaini
-          </motion.div>
+          </motion.button>
 
           {/* Desktop Navigation */}
           <motion.nav
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="hidden md:flex space-x-1"
+            className="hidden md:block"
           >
-            {menuItems.map((item) => (
-              <Button
-                key={item.id}
-                variant="ghost"
-                className="text-gray-300 hover:text-white hover:bg-blue-500/10"
-                onClick={() => scrollToSection(item.id)}
-              >
-                {item.label}
-              </Button>
-            ))}
+            <HoverEffectNav
+              items={menuItems}
+              onItemClick={scrollToSection}
+              className="border border-white/10 bg-gray-900/40 backdrop-blur-md"
+            />
           </motion.nav>
 
           {/* Mobile Menu Button */}
