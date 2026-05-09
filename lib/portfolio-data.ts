@@ -114,7 +114,7 @@ export const allProjects: PortfolioProject[] = [
       TailwindCSS: "tailwind-icon.svg",
       CrewAI: "crewai-icon.png",
     },
-    projectUrl: "https://wealthwisee.live/",
+    projectUrl: "https://wealthwisee.vercel.app/",
     githubUrl:
       "https://github.com/Abhiyantrana-Navonmesakah/Wealth-wise-frontend",
     theme: "#28418f",
