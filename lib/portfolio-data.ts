@@ -127,7 +127,7 @@ export const allProjects: PortfolioProject[] = [
     projectHeading: "Vercel Clone",
     description:
       "A simplified clone of Vercel's deployment platform with CI/CD capabilities.",
-    imageUrl: "demo.gif",
+    imageUrl: "demo.mp4",
     features: [
       "Developed a Vercel-like deployment platform with a user-friendly UI for seamless project uploads via Git repos.",
       "Designed a deployment pipeline where projects are stored in AWS S3, built using dynamic environment detection, and served via cloud storage.",

@@ -49,7 +49,6 @@ export default function ExperienceSection() {
   const [hoveredAchievement, setHoveredAchievement] = useState<number | null>(
     null,
   );
-  const [imagesPreloaded, setImagesPreloaded] = useState(false);
 
   // Debug state
   console.log("🔍 Current hovered achievement:", hoveredAchievement);
@@ -143,17 +142,7 @@ export default function ExperienceSection() {
     },
   ];
 
-  // Preload achievement images for instant display on hover
-  useEffect(() => {
-    achievements.forEach((achievement) => {
-      if (achievement.image) {
-        const img = new window.Image();
-        img.src = achievement.image;
-        img.onload = () => console.log(`✅ Preloaded: ${achievement.image}`);
-      }
-    });
-    setImagesPreloaded(true);
-  }, []);
+
 
   return (
     <section className="relative py-0 pb-4 bg-gray-900">

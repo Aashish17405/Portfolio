@@ -78,6 +78,33 @@ const PortfolioComponent: React.FC<ProjectComponentProps> = ({
     };
   }, [isHovering]);
 
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
+
+  useEffect(() => {
+    if (!imageUrl.endsWith(".mp4")) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldLoadVideo(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" }
+    );
+
+    const currentCardRef = cardRef.current;
+    if (currentCardRef) {
+      observer.observe(currentCardRef);
+    }
+
+    return () => {
+      if (currentCardRef) {
+        observer.unobserve(currentCardRef);
+      }
+    };
+  }, [imageUrl]);
+
   return (
     <div className="bg-black text-white px-4 sm:px-6 md:px-8 pb-12 sm:pb-16 md:pb-24 flex items-center justify-center relative overflow-hidden min-h-screen">
       <style jsx global>{`
@@ -178,11 +205,29 @@ const PortfolioComponent: React.FC<ProjectComponentProps> = ({
                   onMouseLeave={handleMouseLeave}
                   onClick={() => window.open(githubUrl, "_blank")}
                 >
-                  <img
-                    src={`/projects/${imageUrl}`}
-                    alt="Project Preview"
-                    className="w-full h-auto object-cover rounded-md md:rounded-xl"
-                  />
+                  {imageUrl.endsWith(".mp4") ? (
+                    shouldLoadVideo ? (
+                      <video
+                        src={`/projects/${imageUrl}`}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        className="w-full h-auto object-cover rounded-md md:rounded-xl"
+                      />
+                    ) : (
+                      <div className="w-full aspect-[960/528] bg-gray-950/80 animate-pulse rounded-md md:rounded-xl flex items-center justify-center text-xs text-gray-500">
+                        Loading preview...
+                      </div>
+                    )
+                  ) : (
+                    <img
+                      src={`/projects/${imageUrl}`}
+                      alt="Project Preview"
+                      className="w-full h-auto object-cover rounded-md md:rounded-xl"
+                      loading="lazy"
+                    />
+                  )}
                 </div>
               </div>
             </div>

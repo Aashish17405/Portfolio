@@ -10,6 +10,7 @@ import { Analytics } from "@vercel/analytics/next";
 import CustomCursor from "@/components/custom-cursor";
 import { CursorProvider } from "@/context/cursor-context";
 import Chatbot from "@/components/chatbot";
+import LenisProvider from "@/components/lenis-provider";
 
 // Preload fonts to ensure they're available
 const inter = Inter({
@@ -184,21 +185,23 @@ export default function RootLayout({
         className={`${inter.variable} ${spaceGrotesk.variable} font-sans`}
         suppressHydrationWarning
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <CursorProvider>
-            <BackgroundEffect />
-            <Analytics />
-            {children}
-            <CustomCursor />
-            <Chatbot />
-            <Toaster />
-          </CursorProvider>
-        </ThemeProvider>
+        <LenisProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <CursorProvider>
+              <BackgroundEffect />
+              <Analytics />
+              {children}
+              <CustomCursor />
+              <Chatbot />
+              <Toaster />
+            </CursorProvider>
+          </ThemeProvider>
+        </LenisProvider>
       </body>
     </html>
   );
