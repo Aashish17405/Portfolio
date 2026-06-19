@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 
 const SYSTEM_PROMPT = `You are an Expert at answering questions about Aashish Jaini, providing accurate and polite responses.\n\nInstructions:\n1. Respond to inquiries regarding Aashish Jaini with courtesy and politeness.\n2. Provide ALL relevant information about Aashish, ensuring that responses are truthful and based solely on the information available.\n3. If a question asks for information not present in your knowledge, clearly indicate that you do not have that data.\n4. Maintain professionalism throughout the conversation, especially since the context may involve a recruiter in an AI startup/company.`;
 
@@ -23,8 +25,56 @@ function extractTextFromLyzrResponse(data: any) {
   return JSON.stringify(data);
 }
 
+let ratelimit: Ratelimit | null = null;
+
+function getRateLimiter() {
+  if (ratelimit) return ratelimit;
+
+  const url = process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+
+  if (!url || !token) {
+    console.warn("⚠️ Upstash Redis env vars missing. Chatbot rate limiting is disabled.");
+    return null;
+  }
+
+  const redis = new Redis({ url, token });
+  ratelimit = new Ratelimit({
+    redis: redis,
+    limiter: Ratelimit.slidingWindow(
+      Number(process.env.CHATBOT_RATE_LIMIT_REQUESTS || 10),
+      (process.env.CHATBOT_RATE_LIMIT_DURATION || "60 s") as any
+    ),
+    analytics: true,
+    prefix: "@upstash/ratelimit/chatbot",
+  });
+
+  return ratelimit;
+}
+
 export async function POST(req: Request) {
   try {
+    const ip = req.headers.get("x-forwarded-for") || "127.0.0.1";
+    const limiter = getRateLimiter();
+
+    if (limiter) {
+      const { success, limit, reset, remaining } = await limiter.limit(ip);
+
+      if (!success) {
+        return NextResponse.json(
+          { error: "Too many requests. Please try again later." },
+          {
+            status: 429,
+            headers: {
+              "X-RateLimit-Limit": limit.toString(),
+              "X-RateLimit-Remaining": remaining.toString(),
+              "X-RateLimit-Reset": reset.toString(),
+            },
+          }
+        );
+      }
+    }
+
     const body = await req.json();
     const { message, history } = body || {};
 

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import prisma from "@/utils/prisma";
 import nodemailer from "nodemailer";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 
 const contactSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -19,8 +21,56 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+let ratelimit: Ratelimit | null = null;
+
+function getRateLimiter() {
+  if (ratelimit) return ratelimit;
+
+  const url = process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+
+  if (!url || !token) {
+    console.warn("⚠️ Upstash Redis env vars missing. Contact rate limiting is disabled.");
+    return null;
+  }
+
+  const redis = new Redis({ url, token });
+  ratelimit = new Ratelimit({
+    redis: redis,
+    limiter: Ratelimit.slidingWindow(
+      Number(process.env.CONTACT_RATE_LIMIT_REQUESTS || 3),
+      (process.env.CONTACT_RATE_LIMIT_DURATION || "1 h") as any
+    ),
+    analytics: true,
+    prefix: "@upstash/ratelimit/contact",
+  });
+
+  return ratelimit;
+}
+
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get("x-forwarded-for") || "127.0.0.1";
+    const limiter = getRateLimiter();
+
+    if (limiter) {
+      const { success, limit, reset, remaining } = await limiter.limit(ip);
+
+      if (!success) {
+        return NextResponse.json(
+          { error: "Too many contact form submissions. Please try again later." },
+          {
+            status: 429,
+            headers: {
+              "X-RateLimit-Limit": limit.toString(),
+              "X-RateLimit-Remaining": remaining.toString(),
+              "X-RateLimit-Reset": reset.toString(),
+            },
+          }
+        );
+      }
+    }
+
     const body = await req.json();
     const parsedData = contactSchema.parse(body);
     const { name, email, subject, message } = parsedData;

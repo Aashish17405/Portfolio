@@ -10,6 +10,8 @@ import {
   Download,
   FileText,
   Medal,
+  Lock,
+  Unlock,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -344,11 +346,19 @@ export default function ExperienceSection() {
                     index % 2 === 0 ? "md:pr-12" : "md:pl-12"
                   }`}
                 >
-                  <Card className="bg-gray-800/50 border-gray-700 hover:border-yellow-500/50 transition-all duration-300 cursor-none">
-                    <CardContent className="p-4 md:p-5">
+                  <Card className="bg-gray-800/50 border-gray-700 hover:border-yellow-500/50 transition-all duration-300 cursor-none hover:shadow-[0_0_15px_rgba(234,179,8,0.1)]">
+                    <CardContent className="p-4 md:p-5 flex flex-col">
                       <div className="flex items-start gap-3 mb-3">
-                        <div className="p-2 rounded-full bg-yellow-500/20 text-yellow-400">
-                          <Award className="h-4 w-4 md:h-5 md:w-5" />
+                        <div className={`p-2 rounded-full transition-all duration-300 ${
+                          hoveredAchievement === index
+                            ? "bg-yellow-500/20 text-yellow-400 scale-110 rotate-12"
+                            : "bg-gray-700/50 text-gray-400"
+                        }`}>
+                          {hoveredAchievement === index ? (
+                            <Unlock className="h-4 w-4 md:h-5 md:w-5 animate-bounce" />
+                          ) : (
+                            <Lock className="h-4 w-4 md:h-5 md:w-5" />
+                          )}
                         </div>
                         <div>
                           <h3 className="font-bold text-base md:text-lg">
@@ -367,27 +377,26 @@ export default function ExperienceSection() {
                         {achievement.description}
                       </p>
 
-                      <div className="flex justify-between items-center flex-wrap gap-2">
+                      <div className="flex justify-between items-center flex-wrap gap-2 mt-auto">
                         <Badge
                           variant="outline"
                           className="border-yellow-500/30 text-yellow-400 text-xs md:text-sm"
                         >
                           {achievement.period}
                         </Badge>
-                        <span className="hidden md:inline-flex text-xs text-yellow-300/80 transition-colors group-hover:text-yellow-200">
-                          Hover to preview 🙂
+                        <span className={`hidden md:inline-flex text-xs transition-colors font-semibold ${
+                          hoveredAchievement === index ? "text-yellow-400 " : "text-gray-500"
+                        }`}>
+                          {hoveredAchievement === index 
+                            ? "Aha! You discovered the win! 🎉" 
+                            : "🤫 Please don't hover your mouse onto this"}
                         </span>
-                        <Badge
-                          variant="outline"
-                          className="bg-yellow-500/80 text-white border-0 text-xs md:text-sm hover:bg-yellow-500/80"
-                        >
-                          Achievement
-                        </Badge>
+                        
                       </div>
                     </CardContent>
                   </Card>
 
-                  {/* ✅ Hover Image Preview beside the card */}
+                  {/* ✅ Hover Image Preview on the other side of the card, with responsive viewport classes */}
                   <AnimatePresence mode="wait">
                     {hoveredAchievement === index && achievement.image && (
                       <motion.div
@@ -398,37 +407,52 @@ export default function ExperienceSection() {
                           duration: 0.2,
                           ease: [0.4, 0, 0.2, 1],
                         }}
-                        className={`absolute top-[1%] transform -translate-y-1/2 z-[100] pointer-events-none ${
+                        className={`z-[100] pointer-events-none w-full h-[220px] relative mt-4 md:mt-0 md:absolute md:w-[370px] md:h-[220px] md:top-[1%] md:transform md:-translate-y-1/2 ${
                           index % 2 === 0
-                            ? "left-full ml-12"
-                            : "right-full mr-12"
+                            ? "md:left-full md:ml-12"
+                            : "md:right-full md:mr-12"
                         }`}
-                        style={{
-                          width: "370px",
-                          height: "220px",
-                        }}
                       >
-                        <div className="w-full h-full border-2 border-yellow-400 rounded-lg overflow-hidden shadow-2xl bg-gray-900/95 p-3">
-                          <Image
-                            src={achievement.image}
-                            alt={achievement.title}
-                            width={350}
-                            height={200}
-                            className="w-full h-full object-cover rounded-md"
-                            loading="eager"
-                            quality={90}
-                            unoptimized={false}
-                            onLoad={() =>
-                              console.log(
-                                `✅ Image displayed: ${achievement.image}`,
-                              )
-                            }
-                            onError={() =>
-                              console.log(
-                                `❌ Image failed: ${achievement.image}`,
-                              )
-                            }
-                          />
+                        <div className="w-full h-full border-2 border-yellow-400 rounded-lg overflow-hidden shadow-2xl bg-gray-900/95 p-3 shadow-yellow-900/30 relative">
+                          {/* Blurry to Sharp revealing animation */}
+                          <motion.div
+                            initial={{ filter: "blur(12px) grayscale(100%)", scale: 1.05, opacity: 0.3 }}
+                            animate={{ filter: "blur(0px) grayscale(0%)", scale: 1, opacity: 1 }}
+                            transition={{ delay: 0.15, duration: 0.6, ease: "easeOut" }}
+                            className="relative w-full h-full"
+                          >
+                            <Image
+                              src={achievement.image}
+                              alt={achievement.title}
+                              fill
+                              className="object-cover rounded-md"
+                              loading="eager"
+                              quality={90}
+                            />
+                          </motion.div>
+                          
+                          {/* Locked Overlay Fading Out */}
+                          <motion.div
+                            initial={{ opacity: 1 }}
+                            animate={{ opacity: 0 }}
+                            transition={{ delay: 0.15, duration: 0.4, ease: "easeOut" }}
+                            className="absolute inset-0 bg-gray-950/70 backdrop-blur-sm flex flex-col items-center justify-center pointer-events-none p-4 text-center"
+                          >
+                            <Lock className="h-6 w-6 text-yellow-500/70 mb-2 animate-pulse" />
+                            <p className="text-xs text-yellow-200/80 font-semibold">
+                              🤫 Please don't hover your mouse onto this
+                            </p>
+                          </motion.div>
+
+                          {/* Unlocked Badge Overlay */}
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0.75 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 0.35, duration: 0.3, type: "spring", stiffness: 100 }}
+                            className="absolute top-2 right-2 bg-yellow-500/90 text-gray-950 font-bold px-2 py-0.5 rounded text-[10px] tracking-wide uppercase"
+                          >
+                            Unlocked
+                          </motion.div>
                         </div>
                       </motion.div>
                     )}
