@@ -6,29 +6,94 @@ import { motion, AnimatePresence } from "framer-motion";
 
 // Small helper to render simple markdown-like text coming from the agent.
 function FormattedText({ text }: { text: string }) {
-  // Split into lines to detect numbered lists
   const lines = text.split(/\r?\n/);
-
   const content: React.ReactNode[] = [];
   let i = 0;
+
   while (i < lines.length) {
     const line = lines[i];
+
+    if (line.trim() === "") {
+      i++;
+      continue;
+    }
+
+    // Check for bullet list item (- or * or •)
+    const bulletMatch = line.match(/^\s*[-*•]\s+(.*)/);
+    if (bulletMatch) {
+      const items: string[] = [bulletMatch[1]];
+      i++;
+      while (i < lines.length) {
+        const nextLine = lines[i];
+        if (nextLine.trim() === "") {
+          let j = i + 1;
+          while (j < lines.length && lines[j].trim() === "") {
+            j++;
+          }
+          if (j < lines.length && lines[j].match(/^\s*[-*•]\s+/)) {
+            i = j;
+            const nextMatch = lines[i].match(/^\s*[-*•]\s+(.*)/);
+            if (nextMatch) items.push(nextMatch[1]);
+            i++;
+          } else {
+            break;
+          }
+        } else {
+          const nextMatch = nextLine.match(/^\s*[-*•]\s+(.*)/);
+          if (nextMatch) {
+            items.push(nextMatch[1]);
+            i++;
+          } else {
+            break;
+          }
+        }
+      }
+      content.push(
+        <ul className="list-disc list-outside pl-5 mb-4 space-y-2 text-sm leading-relaxed text-gray-200" key={`ul-${i}`}>
+          {items.map((it, idx) => (
+            <li key={idx}>
+              {renderInline(it)}
+            </li>
+          ))}
+        </ul>,
+      );
+      continue;
+    }
+
+    // Check for numbered list item
     const listMatch = line.match(/^\s*\d+\.\s+(.*)/);
     if (listMatch) {
-      // Collect consecutive numbered list items
       const items: string[] = [listMatch[1]];
       i++;
       while (i < lines.length) {
-        const nextMatch = lines[i].match(/^\s*\d+\.\s+(.*)/);
-        if (nextMatch) {
-          items.push(nextMatch[1]);
-          i++;
-        } else break;
+        const nextLine = lines[i];
+        if (nextLine.trim() === "") {
+          let j = i + 1;
+          while (j < lines.length && lines[j].trim() === "") {
+            j++;
+          }
+          if (j < lines.length && lines[j].match(/^\s*\d+\.\s+/)) {
+            i = j;
+            const nextMatch = lines[i].match(/^\s*\d+\.\s+(.*)/);
+            if (nextMatch) items.push(nextMatch[1]);
+            i++;
+          } else {
+            break;
+          }
+        } else {
+          const nextMatch = nextLine.match(/^\s*\d+\.\s+(.*)/);
+          if (nextMatch) {
+            items.push(nextMatch[1]);
+            i++;
+          } else {
+            break;
+          }
+        }
       }
       content.push(
-        <ol className="list-decimal list-inside ml-4" key={i}>
+        <ol className="list-decimal list-outside pl-5 mb-4 space-y-2 text-sm leading-relaxed text-gray-200" key={`ol-${i}`}>
           {items.map((it, idx) => (
-            <li key={idx} className="mb-1">
+            <li key={idx}>
               {renderInline(it)}
             </li>
           ))}
@@ -37,20 +102,25 @@ function FormattedText({ text }: { text: string }) {
       continue;
     }
 
-    // Normal paragraph/line
-    if (line.trim() === "") {
-      content.push(<br key={i} />);
-    } else {
-      content.push(
-        <p className="m-0 text-sm leading-snug" key={i}>
-          {renderInline(line)}
-        </p>,
-      );
-    }
+    // Normal paragraph text block
+    const paraLines: string[] = [line];
     i++;
+    while (i < lines.length) {
+      const nextLine = lines[i];
+      if (nextLine.trim() === "" || nextLine.match(/^\s*[-*•]\s+/) || nextLine.match(/^\s*\d+\.\s+/)) {
+        break;
+      }
+      paraLines.push(nextLine);
+      i++;
+    }
+    content.push(
+      <p className="mb-4 text-sm leading-relaxed text-gray-200 last:mb-0" key={`p-${i}`}>
+        {renderInline(paraLines.join(" "))}
+      </p>,
+    );
   }
 
-  return <div className="whitespace-pre-wrap">{content}</div>;
+  return <div className="text-gray-200">{content}</div>;
 }
 
 function renderInline(text: string): React.ReactNode {
@@ -115,12 +185,18 @@ export default function Chatbot() {
     if (!trimmed) return;
 
     const userMsgId = Date.now();
-    setMessages((m) => [...m, { from: "user", text: trimmed, id: userMsgId }]);
+    // Use the latest messages list including user's message for history when fetching
+    const updatedMessages = [...messages, { from: "user" as const, text: trimmed, id: userMsgId }];
+    setMessages(updatedMessages);
     setInput("");
     setIsTyping(true);
 
     // Send to server API
     (async () => {
+      const botMsgId = Date.now() + 1;
+      let botText = "";
+      let hasAddedBotMessage = false;
+
       try {
         const resp = await fetch("/api/chatbot", {
           method: "POST",
@@ -130,31 +206,63 @@ export default function Chatbot() {
           body: JSON.stringify({ message: trimmed, history: messages }),
         });
 
-        const data = await resp.json();
+        if (!resp.ok) {
+          const errData = await resp.json().catch(() => ({}));
+          throw new Error(errData.error || "Server error");
+        }
 
-        // Simulate a slight delay for more natural feel
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        const reader = resp.body?.getReader();
+        if (!reader) {
+          throw new Error("No response body");
+        }
 
         setIsTyping(false);
-        setMessages((cur) => [
-          ...cur,
-          {
-            from: "bot",
-            text: data.reply || data.error || "No response",
-            id: Date.now(),
-          },
-        ]);
-      } catch (err) {
-        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        const decoder = new TextDecoder();
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value, { stream: true });
+          botText += chunk;
+
+          if (!hasAddedBotMessage) {
+            hasAddedBotMessage = true;
+            setMessages((cur) => [
+              ...cur,
+              {
+                from: "bot",
+                text: botText,
+                id: botMsgId,
+              },
+            ]);
+          } else {
+            setMessages((cur) =>
+              cur.map((m) =>
+                m.id === botMsgId ? { ...m, text: botText } : m
+              )
+            );
+          }
+        }
+      } catch (err: any) {
         setIsTyping(false);
-        setMessages((cur) => [
-          ...cur,
-          {
-            from: "bot",
-            text: "Sorry - something went wrong.",
-            id: Date.now(),
-          },
-        ]);
+        const errMsg = err?.message || "Sorry - something went wrong.";
+        if (hasAddedBotMessage) {
+          setMessages((cur) =>
+            cur.map((m) =>
+              m.id === botMsgId ? { ...m, text: errMsg } : m
+            )
+          );
+        } else {
+          setMessages((cur) => [
+            ...cur,
+            {
+              from: "bot",
+              text: errMsg,
+              id: botMsgId,
+            },
+          ]);
+        }
       }
     })();
   }
@@ -253,7 +361,7 @@ export default function Chatbot() {
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-white">AI Assistant</h3>
+                  <h3 className="text-sm font-bold text-white">Chat with Aashish (AI)</h3>
                   <p className="text-[11px] text-gray-400 font-medium">
                     Online & Ready
                   </p>
@@ -272,7 +380,8 @@ export default function Chatbot() {
             {/* Messages area */}
             <div
               ref={listRef}
-              className="flex-1 overflow-y-auto px-4 py-4 space-y-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent"
+              data-lenis-prevent
+              className="flex-1 overflow-y-auto px-4 py-4 space-y-4 custom-scrollbar"
             >
               {messages.length === 0 && (
                 <motion.div
@@ -313,12 +422,13 @@ export default function Chatbot() {
                       whileHover={
                         m.from === "user"
                           ? { scale: 1.03 }
-                          : {
-                              y: -4,
-                              boxShadow: "0 8px 24px rgba(99,102,241,0.12)",
-                            }
+                          : undefined
                       }
-                      whileTap={{ scale: 0.98 }}
+                      whileTap={
+                        m.from === "user"
+                          ? { scale: 0.98 }
+                          : undefined
+                      }
                       transition={{ type: "spring", stiffness: 300 }}
                       className={`max-w-[85%] px-4 py-3 rounded-2xl text-sm shadow-sm ${
                         m.from === "user"

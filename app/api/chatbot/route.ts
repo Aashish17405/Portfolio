@@ -119,7 +119,29 @@ export async function POST(req: Request) {
 
       const data = await res.json();
       const assistant = extractTextFromLyzrResponse(data) || "";
-      return NextResponse.json({ reply: assistant });
+
+      // Stream the static response back chunk by chunk to simulate streaming
+      const encoder = new TextEncoder();
+      const stream = new ReadableStream({
+        async start(controller) {
+          // Send words with small delays to mimic streaming
+          const words = assistant.split(" ");
+          for (let i = 0; i < words.length; i++) {
+            const word = words[i] + (i === words.length - 1 ? "" : " ");
+            controller.enqueue(encoder.encode(word));
+            await new Promise((resolve) => setTimeout(resolve, 30));
+          }
+          controller.close();
+        },
+      });
+
+      return new Response(stream, {
+        headers: {
+          "Content-Type": "text/plain; charset=utf-8",
+          "Cache-Control": "no-cache, no-transform",
+          "Connection": "keep-alive",
+        },
+      });
     }
 
     // Fallback to OpenAI Chat Completions if no Lyzr key present
@@ -154,7 +176,8 @@ export async function POST(req: Request) {
       temperature: Number(process.env.OPENAI_TEMPERATURE || 0.7),
       top_p: Number(process.env.OPENAI_TOP_P || 0.9),
       max_tokens: 800,
-    } as any;
+      stream: true,
+    };
 
     const res = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -173,10 +196,77 @@ export async function POST(req: Request) {
       );
     }
 
-    const data = await res.json();
-    const assistant = data?.choices?.[0]?.message?.content || "";
+    const encoder = new TextEncoder();
+    const decoder = new TextDecoder();
 
-    return NextResponse.json({ reply: assistant });
+    const stream = new ReadableStream({
+      async start(controller) {
+        const reader = res.body?.getReader();
+        if (!reader) {
+          controller.close();
+          return;
+        }
+
+        let buffer = "";
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split("\n");
+            // Keep the last partial line in the buffer
+            buffer = lines.pop() || "";
+
+            for (const line of lines) {
+              const cleanLine = line.trim();
+              if (!cleanLine) continue;
+              if (cleanLine === "data: [DONE]") continue;
+
+              if (cleanLine.startsWith("data: ")) {
+                try {
+                  const jsonStr = cleanLine.substring(6);
+                  const parsed = JSON.parse(jsonStr);
+                  const content = parsed.choices?.[0]?.delta?.content || "";
+                  if (content) {
+                    controller.enqueue(encoder.encode(content));
+                  }
+                } catch (e) {
+                  // Ignore parse errors for malformed lines
+                }
+              }
+            }
+          }
+          // Process any remaining buffer
+          if (buffer && buffer.startsWith("data: ")) {
+            try {
+              const jsonStr = buffer.substring(6).trim();
+              if (jsonStr !== "[DONE]") {
+                const parsed = JSON.parse(jsonStr);
+                const content = parsed.choices?.[0]?.delta?.content || "";
+                if (content) {
+                  controller.enqueue(encoder.encode(content));
+                }
+              }
+            } catch (e) {
+              // Ignore
+            }
+          }
+        } catch (error) {
+          controller.error(error);
+        } finally {
+          controller.close();
+        }
+      },
+    });
+
+    return new Response(stream, {
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "no-cache, no-transform",
+        "Connection": "keep-alive",
+      },
+    });
   } catch (err: any) {
     return NextResponse.json(
       { error: err?.message || String(err) },
