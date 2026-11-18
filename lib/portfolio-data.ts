@@ -25,6 +25,7 @@ export const portfolioProfile = {
     github: "https://github.com/Aashish17405",
     linkedin: "https://www.linkedin.com/in/jaini-aashish-62a202290/",
     leetcode: "https://leetcode.com/u/aashish17405/",
+    portfolio: "https://aashishjaini.me/",
   },
   education: [
     {

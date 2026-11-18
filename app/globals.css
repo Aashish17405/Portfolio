@@ -242,3 +242,20 @@ html.lenis, html.lenis body {
   background: rgba(156, 163, 175, 0.5);
 }
 
+/* Admin Portal native cursor & light theme utilities */
+.admin-portal,
+.admin-portal * {
+  cursor: auto !important;
+}
+
+.admin-portal button,
+.admin-portal a,
+.admin-portal [role="button"] {
+  cursor: pointer !important;
+}
+
+.admin-portal input,
+.admin-portal textarea {
+  cursor: text !important;
+}
+

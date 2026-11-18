@@ -5,7 +5,6 @@ import { Fira_Code } from "next/font/google";
 import styles from "@/styles/Typewriter.module.css";
 
 const nunito = Fira_Code({
-  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
 });
 

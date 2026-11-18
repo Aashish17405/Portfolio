@@ -6,7 +6,8 @@ import { motion, AnimatePresence } from "framer-motion";
 
 // Small helper to render simple markdown-like text coming from the agent.
 function FormattedText({ text }: { text: string }) {
-  const lines = text.split(/\r?\n/);
+  const cleaned = text.replace(/[\u2014\u2013]/g, " - ");
+  const lines = cleaned.split(/\r?\n/);
   const content: React.ReactNode[] = [];
   let i = 0;
 
